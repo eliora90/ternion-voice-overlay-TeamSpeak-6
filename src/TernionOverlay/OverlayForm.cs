@@ -66,6 +66,8 @@ public sealed class OverlayForm : Form
             Invalidate();
             ApplyIntrinsicSize();
         }
+        else if (_client.State.Visible.Any(p => JoinFlash.IsActive(p.JoinedAtUtc, DateTime.UtcNow)))
+            Invalidate(); // keep both pulses animating even without further TS6 events
     }
 
     private void ApplyIntrinsicSize()
@@ -282,7 +284,10 @@ public sealed class OverlayForm : Form
         int pillW = Math.Min(w - 8, measured + (int)left + iconsW + avatarRightW + 12);
         int offset = _cfg.Alignment == "right" ? w - 8 - pillW : 0;
         int pillH = rowH - 6;
-        using var fill = new SolidBrush(Color.FromArgb(30, 32, 37));
+        double blue = !talking && JoinFlash.IsActive(p.JoinedAtUtc, DateTime.UtcNow)
+            ? JoinFlash.Intensity(DateTime.UtcNow - p.JoinedAtUtc) : 0;
+        using var fill = new SolidBrush(Color.FromArgb(
+            30 + (int)(10 * blue), 32 + (int)(95 * blue), 37 + (int)(155 * blue)));
         g.SmoothingMode = SmoothingMode.None;
         g.FillRoundRect(fill, 4 + offset, y + 2, pillW, pillH, Math.Min(pillH, 18));
         if (talking)

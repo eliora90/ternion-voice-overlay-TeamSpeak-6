@@ -1,3 +1,5 @@
+using System.Collections.Concurrent;
+
 namespace TernionCore;
 
 /// <summary>Один участник на сервере TeamSpeak.</summary>
@@ -14,9 +16,29 @@ public sealed class Participant
     public bool InputMuted;
     public bool OutputMuted;
     public bool Away;
+    // Zero for participants from the initial snapshot; only live arrivals flash.
+    public DateTime JoinedAtUtc;
 
     public string DisplayName =>
         string.IsNullOrWhiteSpace(Description) ? Nickname : $"{Nickname} ({Description})";
+}
+
+/// <summary>Two short blue pulses followed by the normal gray capsule.</summary>
+public static class JoinFlash
+{
+    public static readonly TimeSpan Duration = TimeSpan.FromSeconds(1.5);
+
+    public static bool IsActive(DateTime joinedAtUtc, DateTime nowUtc) =>
+        joinedAtUtc != default && nowUtc >= joinedAtUtc && nowUtc - joinedAtUtc < Duration;
+
+    public static double Intensity(TimeSpan sinceJoin)
+    {
+        double seconds = sinceJoin.TotalSeconds;
+        if (seconds < 0 || seconds >= Duration.TotalSeconds) return 0;
+        if (seconds < 0.45) return 1 - seconds / 0.45;
+        if (seconds < 0.65) return 0;
+        return Math.Max(0, 1 - (seconds - 0.65) / 0.85);
+    }
 }
 
 /// <summary>Актуальное состояние: к какому каналу подключены, кто в нём, кто говорит.</summary>
@@ -32,7 +54,8 @@ public sealed class TeamState
     public string Error = "";
 
     // Все участники (по id), в том числе на каналах вне нашего.
-    public readonly Dictionary<long, Participant> All = new();
+    // Remote Apps updates this on a worker while the WinForms view enumerates it.
+    public readonly ConcurrentDictionary<long, Participant> All = new();
 
     // Каналы: id -> имя; ParentId: id -> id родителя (0 = корень).
     public readonly Dictionary<long, string> ChannelName = new();

@@ -44,6 +44,7 @@ public static class Program
 
         var me = client.State.All[35];
         Check("описание eliora90 = Наташа", me.Description, "Наташа");
+        Check("при запуске старые участники не мигают", me.JoinedAtUtc == default, true);
         Check("имя в подписи eliora90", me.DisplayName, "eliora90 (Наташа)");
         Check("аватар распарсен", me.AvatarUrl, "https://ex/av.png");
         Check("myTS тег", me.MyTsTag, "eliora90@myteamspeak.com");
@@ -52,10 +53,19 @@ public static class Program
         Check("обновление описания без переподключения", me.Description, "Наталья");
         // после clientMoved(id37 -> ch25) должно стать видимо
         Check("RKNcompany стал виден после clientMoved", client.State.Visible.Any(p => p.Id == 37), true);
+        Check("новый участник появился без перезапуска", client.State.Visible.Any(p => p.Id == 42 && p.Nickname == "Gravemace"), true);
+        var flashTime = client.State.All[42].JoinedAtUtc;
+        Check("у вошедшего есть время голубого мигания",
+            flashTime > DateTime.UtcNow.AddSeconds(-2), true);
+        Check("капсула голубая при входе", JoinFlash.Intensity(TimeSpan.Zero) > 0.8, true);
+        Check("капсула мигает обратно в голубой", JoinFlash.Intensity(TimeSpan.FromMilliseconds(700)) > 0.7, true);
+        Check("после мигания капсула серая", JoinFlash.Intensity(TimeSpan.FromSeconds(2)) == 0, true);
+        Check("анимация заканчивается", JoinFlash.IsActive(DateTime.UtcNow.AddSeconds(-2), DateTime.UtcNow), false);
+        Check("старые участники не мигают", JoinFlash.IsActive(default, DateTime.UtcNow), false);
         var rkn = client.State.All[37];
         Check("RKNcompany говорит (flag/статус)", rkn.Talking, true);
 
-        Check("сохранён apiKey", store.Saved, "f6b1ff57-c902-4fd7-a1f5-d3356a96c248");
+        Check("сохранён apiKey", store.Saved ?? "", "f6b1ff57-c902-4fd7-a1f5-d3356a96c248");
 
         // An authorized TS client can be open without joining any voice server.
         // Re-auth should later recover the channel list without another permission prompt.
@@ -165,6 +175,7 @@ internal sealed class MockTsServer : IDisposable
 
                 // переместить RKNcompany (37) из канала 26 в канал 25 (наш)
                 await SendTextAsync(stream, "{\"payload\":{\"clientId\":37,\"newChannelId\":\"25\",\"oldChannelId\":\"26\"},\"type\":\"clientMoved\"}").ConfigureAwait(false);
+                await SendTextAsync(stream, "{\"payload\":{\"clientId\":42,\"connectionId\":1,\"oldChannelId\":\"0\",\"newChannelId\":\"25\",\"properties\":{\"nickname\":\"Gravemace\",\"description\":\"\",\"inputMuted\":false,\"outputMuted\":false}},\"type\":\"clientMoved\"}").ConfigureAwait(false);
                 await SendTextAsync(stream, "{\"payload\":{\"clientId\":35,\"properties\":{\"description\":\"Наталья\"}},\"type\":\"clientPropertiesUpdated\"}").ConfigureAwait(false);
                 await Task.Delay(1500).ConfigureAwait(false);
             }

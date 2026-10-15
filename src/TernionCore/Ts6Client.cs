@@ -345,19 +345,41 @@ public sealed class Ts6Client : IAsyncDisposable
         try
         {
             if (!root.TryGetProperty("payload", out var p)) return;
-            long id = p.TryGetProperty("clientId", out var c) ? c.GetInt64() : 0;
+            long id = LongOf(p, "clientId");
             long oldCh = LongOf(p, "oldChannelId");
             long newCh = LongOf(p, "newChannelId");
-            if (State.All.TryGetValue(id, out var part))
+            if (id <= 0) return;
+            if (newCh <= 0)
             {
-                part.ChannelId = newCh;
-                if (id == State.OurClientId)
-                {
-                    State.OurChannelId = newCh;
-                    State.OurChannelName = NameOf(newCh);
-                }
+                State.All.TryRemove(id, out _);
                 StateUpdated?.Invoke();
+                return;
             }
+            if (!State.All.TryGetValue(id, out var part))
+            {
+                part = new Participant { Id = id };
+                State.All[id] = part;
+            }
+            bool enteredOurChannel = id != State.OurClientId &&
+                newCh == State.OurChannelId && part.ChannelId != newCh;
+            part.ChannelId = newCh;
+            if (enteredOurChannel) part.JoinedAtUtc = DateTime.UtcNow;
+            if (p.TryGetProperty("properties", out var properties) && properties.ValueKind == JsonValueKind.Object)
+            {
+                var nick = Get(properties, "nickname");
+                if (nick.Length > 0) part.Nickname = nick;
+                if (properties.TryGetProperty("description", out var description) && description.ValueKind == JsonValueKind.String)
+                    part.Description = description.GetString() ?? "";
+                part.AvatarUrl = ParseAvatar(Get(properties, "myteamspeakAvatar"));
+                part.InputMuted = GetBool(properties, "inputMuted");
+                part.OutputMuted = GetBool(properties, "outputMuted");
+            }
+            if (id == State.OurClientId)
+            {
+                State.OurChannelId = newCh;
+                State.OurChannelName = NameOf(newCh);
+            }
+            StateUpdated?.Invoke();
         }
         catch { }
     }
