@@ -1,0 +1,27 @@
+# Generated .NET files
+**/bin/
+**/obj/
+.vs/
+*.user
+*.suo
+
+# Distributed Windows binaries are not source files (single-file EXE > GitHub file limit)
+dist/
+*.exe
+*.pdb
+
+# Local configuration / credentials / avatar cache
+config.json
+apikey.txt
+avatars/
+*.log
+.env
+.env.*
+*.key
+*.pem
+
+# Editor and system files
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
