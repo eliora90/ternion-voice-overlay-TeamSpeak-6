@@ -78,9 +78,11 @@ The harness tests the connection snapshot, Description, channel membership and e
 - **Not visible over a game** — first test it on the desktop, then try a windowed or borderless game. Ordinary windows may not appear over every exclusive full-screen mode.
 - **Cannot drag it** — unlock via the tray and drag a visible capsule rather than the transparent gap; lock it again after moving.
 
-## Made with AI-assisted coding
+## Future plans
 
-This project was developed through vibe coding with Hermes Agent (Codex and DeepSeek v4 Flash 0713).
+Design updates and collecting feedback.
+
+## Made with vibe coding through Hermes Agent (OpenAI ChatGPT 6 Sol + DeepSeek v4 Flash 0713)
 
 ## Status and distribution
 
