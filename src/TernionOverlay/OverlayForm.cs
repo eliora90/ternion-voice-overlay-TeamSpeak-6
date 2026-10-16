@@ -240,7 +240,7 @@ public sealed class OverlayForm : Form
             // Color-key transparency cannot blend anti-aliased edges: intermediate
             // magenta pixels survive the key and appear as pink halos on Windows.
             g.SmoothingMode = SmoothingMode.None;
-            g.FillRoundRect(bg, 4 + offset, 4, pillW, rowH - 4, Math.Min(14, rowH - 4));
+            g.FillRoundRect(bg, 4 + offset, 4, pillW, rowH - 4, Math.Min(16, rowH - 4));
             g.SmoothingMode = SmoothingMode.AntiAlias;
             TextRenderer.DrawText(g, msg, f, new Rectangle(13 + offset, 4, pillW - 18, rowH - 4), Color.White,
                 TextFormatFlags.SingleLine | TextFormatFlags.VerticalCenter | TextFormatFlags.EndEllipsis | TextFormatFlags.NoPadding);
@@ -289,11 +289,11 @@ public sealed class OverlayForm : Form
         using var fill = new SolidBrush(Color.FromArgb(
             30 + (int)(10 * blue), 32 + (int)(95 * blue), 37 + (int)(155 * blue)));
         g.SmoothingMode = SmoothingMode.None;
-        g.FillRoundRect(fill, 4 + offset, y + 2, pillW, pillH, Math.Min(pillH, 18));
+        g.FillRoundRect(fill, 4 + offset, y + 2, pillW, pillH, Math.Min(pillH, 16));
         if (talking)
         {
-            using var border = new Pen(Color.FromArgb(68, 222, 126), 1.5f);
-            g.DrawRoundRect(border, 4 + offset, y + 2, pillW, pillH, Math.Min(pillH, 18));
+            using var border = new Pen(Color.FromArgb(68, 222, 126), 1f);
+            g.DrawRoundRect(border, 4.5f + offset, y + 2.5f, pillW - 1, pillH - 1, Math.Min(pillH, 16));
         }
         g.SmoothingMode = SmoothingMode.AntiAlias;
         rightText = pillW - iconsW - avatarRightW - 8;
@@ -405,11 +405,12 @@ internal static class GdiRoundRect
     private static GraphicsPath RoundRectPath(float x, float y, float w, float h, float r)
     {
         var p = new GraphicsPath();
-        float d = Math.Min(r, w / 2f);
+        float d = Math.Min(r, Math.Min(w - 1f, h - 1f));
+        float right = x + w - 1f, bottom = y + h - 1f;
         p.AddArc(x, y, d, d, 180, 90);
-        p.AddArc(x + w - d, y, d, d, 270, 90);
-        p.AddArc(x + w - d, y + h - d, d, d, 0, 90);
-        p.AddArc(x, y + h - d, d, d, 90, 90);
+        p.AddArc(right - d, y, d, d, 270, 90);
+        p.AddArc(right - d, bottom - d, d, d, 0, 90);
+        p.AddArc(x, bottom - d, d, d, 90, 90);
         p.CloseFigure();
         return p;
     }

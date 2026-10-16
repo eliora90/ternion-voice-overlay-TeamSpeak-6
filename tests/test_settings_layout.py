@@ -43,6 +43,12 @@ class SettingsLayoutTests(unittest.TestCase):
         self.assertIn('var center = new Point(r.X + r.Width / 2, r.Y + r.Height / 2);', SOURCE)
         self.assertIn('int x1 = center.X', SOURCE)
 
+    def test_action_buttons_draw_rounded_edges_without_jagged_region(self):
+        self.assertIn('internal sealed class RoundedActionButton : Button', SOURCE)
+        self.assertIn('SmoothingMode = SmoothingMode.AntiAlias', SOURCE)
+        self.assertIn('g.FillPath(fill, path);', SOURCE)
+        self.assertNotIn('button.Region = new Region(path)', SOURCE)
+
 
 if __name__ == '__main__':
     unittest.main()

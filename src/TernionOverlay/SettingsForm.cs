@@ -17,7 +17,7 @@ public sealed class SettingsForm : Form
     private readonly Dictionary<Label, string> labels = new();
     private readonly Dictionary<SwitchCheckBox, string> toggles = new();
     private readonly Label title = new(), subtitle = new();
-    private readonly Button save = new(), cancel = new();
+    private readonly RoundedActionButton save = new(), cancel = new();
     private readonly ComboBox language = new(), show = new(), names = new(), avatar = new(), alignment = new();
     private readonly NumericUpDown port = new(), fontSize = new(), width = new();
 
@@ -294,34 +294,14 @@ public sealed class SettingsForm : Form
         combo.DropDownStyle = ComboBoxStyle.DropDownList;
         combo.Items.AddRange(options);
     }
-    private static void SetupButton(Button button, bool primary)
+    private static void SetupButton(RoundedActionButton button, bool primary)
     {
         button.Width = 108; button.Height = 34; button.Top = 7;
-        button.FlatStyle = FlatStyle.Flat;
-        button.BackColor = primary ? Blue : Color.White;
+        button.Primary = primary;
+        button.BackColor = Canvas;
         button.ForeColor = primary ? Color.White : Ink;
-        button.FlatAppearance.BorderSize = primary ? 0 : 1;
-        button.FlatAppearance.BorderColor = Color.FromArgb(214, 224, 237);
         button.Font = new Font("Segoe UI", 9.5f, FontStyle.Bold);
         button.Cursor = Cursors.Hand;
-        void Round()
-        {
-            using var path = new GraphicsPath();
-            var r = new Rectangle(0, 0, button.Width, button.Height);
-            const int d = 12;
-            path.AddArc(r.X, r.Y, d, d, 180, 90);
-            path.AddArc(r.Right - d, r.Y, d, d, 270, 90);
-            path.AddArc(r.Right - d, r.Bottom - d, d, d, 0, 90);
-            path.AddArc(r.X, r.Bottom - d, d, d, 90, 90);
-            path.CloseFigure();
-            var previous = button.Region;
-            button.Region = new Region(path);
-            previous?.Dispose();
-        }
-        button.Resize += (_, _) => Round();
-        Round();
-        button.MouseEnter += (_, _) => button.BackColor = primary ? Color.FromArgb(8, 56, 120) : Color.FromArgb(230, 238, 250);
-        button.MouseLeave += (_, _) => button.BackColor = primary ? Blue : Color.White;
     }
     private void ResizeCards()
     {
@@ -382,6 +362,50 @@ public sealed class SettingsForm : Form
         cfg.FontSize = (int)fontSize.Value; cfg.WindowWidth = (int)width.Value;
         ConfigStore.Save(cfg); DialogResult = DialogResult.OK; apply(); Close();
     }
+}
+
+internal sealed class RoundedActionButton : Button
+{
+    private bool hover, pressed;
+    public bool Primary { get; set; }
+
+    public RoundedActionButton()
+    {
+        SetStyle(ControlStyles.UserPaint | ControlStyles.AllPaintingInWmPaint | ControlStyles.OptimizedDoubleBuffer, true);
+    }
+
+    protected override void OnPaint(PaintEventArgs e)
+    {
+        var g = e.Graphics;
+        g.Clear(BackColor);
+        g.SmoothingMode = SmoothingMode.AntiAlias;
+        using var path = new GraphicsPath();
+        const int d = 14;
+        var r = new RectangleF(1, 1, Width - 2, Height - 2);
+        path.AddArc(r.X, r.Y, d, d, 180, 90);
+        path.AddArc(r.Right - d, r.Y, d, d, 270, 90);
+        path.AddArc(r.Right - d, r.Bottom - d, d, d, 0, 90);
+        path.AddArc(r.X, r.Bottom - d, d, d, 90, 90);
+        path.CloseFigure();
+        var color = Primary ? (pressed ? Color.FromArgb(6, 46, 104) : hover ? Color.FromArgb(8, 56, 120) : SettingsForm.Blue)
+            : hover ? Color.FromArgb(230, 238, 250) : Color.White;
+        using var fill = new SolidBrush(color);
+        g.FillPath(fill, path);
+        if (!Primary)
+        {
+            using var border = new Pen(Color.FromArgb(214, 224, 237));
+            g.DrawPath(border, path);
+        }
+        TextRenderer.DrawText(g, Text, Font, ClientRectangle, ForeColor,
+            TextFormatFlags.HorizontalCenter | TextFormatFlags.VerticalCenter | TextFormatFlags.SingleLine | TextFormatFlags.NoPadding);
+        if (Focused && ShowFocusCues)
+            ControlPaint.DrawFocusRectangle(g, new Rectangle(7, 6, Width - 14, Height - 12), ForeColor, color);
+    }
+
+    protected override void OnMouseEnter(EventArgs e) { hover = true; Invalidate(); base.OnMouseEnter(e); }
+    protected override void OnMouseLeave(EventArgs e) { hover = false; pressed = false; Invalidate(); base.OnMouseLeave(e); }
+    protected override void OnMouseDown(MouseEventArgs e) { pressed = true; Invalidate(); base.OnMouseDown(e); }
+    protected override void OnMouseUp(MouseEventArgs e) { pressed = false; Invalidate(); base.OnMouseUp(e); }
 }
 
 internal sealed class RoundedCard : Panel
