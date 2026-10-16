@@ -31,7 +31,7 @@ On the PC running the overlay, open **Settings → Names** and select **Nick + r
 
 ## Getting started
 
-**Download for Windows:** [TernionOverlay-v1.0-win-x64.exe](https://github.com/eliora90/ternion-voice-overlay-TeamSpeak-6/releases/download/v1.0/TernionOverlay-v1.0-win-x64.exe) ([release notes](https://github.com/eliora90/ternion-voice-overlay-TeamSpeak-6/releases/tag/v1.0)). While this repository is private, only people with access to it can download the release. This is an early test build; the join animation and appearance in actual games still need Windows testing. You can also build from source below.
+**Download for Windows (v1.0):** [TernionOverlay-v1.0-win-x64.exe](https://github.com/eliora90/ternion-voice-overlay-TeamSpeak-6/releases/download/v1.0/TernionOverlay-v1.0-win-x64.exe) ([release notes](https://github.com/eliora90/ternion-voice-overlay-TeamSpeak-6/releases/tag/v1.0)). This build includes the owner-approved settings design; behavior in individual games and display modes may vary. While this repository is private, only people with access to it can download the release. You can also build from source below.
 
 1. Install and open the **TeamSpeak 6 client** on the **same Windows PC** that will run the overlay. Connect to your voice server and join a channel. No TeamSpeak server-side configuration is required.
 2. In TeamSpeak, open **Settings → Remote Apps** and make sure access is enabled. Check the local port: the overlay initially uses **5899**. If another Remote App (for example, Stream Deck) already uses a different port, configure the overlay to use **that same TS6 port** rather than changing the other app.
@@ -47,7 +47,8 @@ On the PC running the overlay, open **Settings → Names** and select **Nick + r
 To see other players' names, ask them to follow the [Description instructions](#how-to-show-players-real-names).
 
 **Controls:** `Alt+T` shows/hides the panel; double-clicking the tray icon does the same. Select **Exit** in the tray to quit completely. Before replacing the EXE with a newer version, quit the older instance through the tray.
-<img width="770" height="878" alt="Ternion Overlay settings and player capsules" src="https://github.com/user-attachments/assets/d0083dd5-ee26-4704-a705-3e4afc9ca5fd" />
+Earlier settings preview (the v1.0 release uses the approved revised layout):
+<img width="770" height="878" alt="Earlier Ternion Overlay settings and player capsules preview" src="https://github.com/user-attachments/assets/d0083dd5-ee26-4704-a705-3e4afc9ca5fd" />
 
 
 ### Local data
@@ -89,4 +90,4 @@ Design updates and collecting feedback.
 
 ## Status and distribution
 
-This repository is private and used for internal testing. `dist/`, `bin/`, `obj/` and user configuration are excluded from Git. The EXE is distributed separately after a Windows check. No open-distribution license has been selected yet.
+This repository remains private. `dist/`, `bin/`, `obj/` and user configuration are excluded from Git; the v1.0 EXE is distributed as a release asset. No open-distribution license has been selected yet.
