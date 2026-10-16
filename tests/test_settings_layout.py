@@ -6,6 +6,19 @@ SOURCE = (Path(__file__).resolve().parents[1] / "src/TernionOverlay/SettingsForm
 
 
 class SettingsLayoutTests(unittest.TestCase):
+    def test_approved_brand_blue_replaces_old_accent(self):
+        self.assertTrue('internal static readonly Color Blue = Color.FromArgb(12, 74, 160);' in SOURCE,
+                        'Settings accent should be #0C4AA0')
+        self.assertNotIn('Color.FromArgb(19, 108, 231)', SOURCE)
+        self.assertTrue('using var background = new SolidBrush(Checked ? SettingsForm.Blue' in SOURCE,
+                        'Switches should use the same blue')
+        self.assertTrue('using var fill = new SolidBrush(Blue);' in SOURCE,
+                        'Section icon tiles should use the approved blue')
+        self.assertTrue('using var pen = new Pen(Color.White, 1.7f)' in SOURCE,
+                        'White symbols should remain legible on blue tiles')
+        self.assertTrue('e.Graphics.FillEllipse(brush, 20, 16, 44, 44);' in SOURCE)
+        self.assertTrue('using var brush = new SolidBrush(Blue);' in SOURCE)
+
     def test_behavior_switches_use_an_inset_block(self):
         self.assertIn('var switches = new TableLayoutPanel', SOURCE)
         self.assertIn('Padding = new Padding(58, 8, 18, 18)', SOURCE)

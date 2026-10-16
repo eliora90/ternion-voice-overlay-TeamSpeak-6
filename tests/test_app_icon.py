@@ -2,12 +2,17 @@
 from pathlib import Path
 import struct
 import unittest
+from PIL import Image
 
 ROOT = Path(__file__).resolve().parents[1]
 PROJECT = ROOT / "src" / "TernionOverlay"
 
 
 class AppIconTests(unittest.TestCase):
+    def test_icon_tile_uses_approved_blue(self):
+        image = Image.open(ROOT / "assets" / "ternion-icon.png").convert("RGBA")
+        self.assertEqual(image.getpixel((256, 30)), (12, 74, 160, 255))
+
     def test_icon_contains_windows_sizes(self):
         data = (PROJECT / "Assets" / "Ternion.ico").read_bytes()
         reserved, icon_type, count = struct.unpack_from("<HHH", data)

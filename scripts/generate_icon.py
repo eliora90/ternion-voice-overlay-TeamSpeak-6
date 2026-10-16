@@ -11,11 +11,11 @@ root = Path(__file__).resolve().parents[1]
 size = 1024
 im = Image.new("RGBA", (size, size), (0, 0, 0, 0))
 d = ImageDraw.Draw(im)
-navy = (18, 31, 53, 255)
+brand_blue = (12, 74, 160, 255)  # #0C4AA0
 white = (244, 249, 255, 255)
 green = (61, 225, 143, 255)
-# Dark rounded tile; no thin border to disappear at tray scale.
-d.rounded_rectangle((35, 35, 989, 989), radius=232, fill=navy)
+# Brand-blue rounded tile; no thin border to disappear at tray scale.
+d.rounded_rectangle((35, 35, 989, 989), radius=232, fill=brand_blue)
 # The selected serif T (option 2) remains separated from the green voice bars.
 font_path = Path('/usr/share/fonts/truetype/dejavu/DejaVuSerif-Bold.ttf')
 font = ImageFont.truetype(str(font_path), 690)

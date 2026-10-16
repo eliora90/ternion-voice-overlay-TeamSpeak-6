@@ -23,7 +23,7 @@ public sealed class SettingsForm : Form
 
     private readonly SwitchCheckBox autoWindows = new(), autoTs = new(), clickThrough = new();
     private readonly TextBox hotkey = new();
-    private static readonly Color Blue = Color.FromArgb(19, 108, 231);
+    internal static readonly Color Blue = Color.FromArgb(12, 74, 160); // #0C4AA0
     private static readonly Color Ink = Color.FromArgb(20, 30, 52);
     private static readonly Color Canvas = Color.FromArgb(239, 244, 251);
 
@@ -60,9 +60,9 @@ public sealed class SettingsForm : Form
         header.MouseDown += DragWindow;
         header.Paint += (_, e) => {
             e.Graphics.SmoothingMode = SmoothingMode.AntiAlias;
-            using var brush = new SolidBrush(Color.FromArgb(220, 234, 252));
+            using var brush = new SolidBrush(Blue);
             e.Graphics.FillEllipse(brush, 20, 16, 44, 44);
-            TextRenderer.DrawText(e.Graphics, "⚙", new Font("Segoe UI Symbol", 19), new Rectangle(24, 20, 38, 36), Blue);
+            TextRenderer.DrawText(e.Graphics, "⚙", new Font("Segoe UI Symbol", 19), new Rectangle(24, 20, 38, 36), Color.White);
         };
         title.Font = new Font("Segoe UI", 15, FontStyle.Bold); title.ForeColor = Ink;
         title.Location = new Point(78, 7); title.AutoSize = true;
@@ -219,8 +219,8 @@ public sealed class SettingsForm : Form
         tile.AddArc(r.Right - 10, r.Bottom - 10, 10, 10, 0, 90);
         tile.AddArc(r.X, r.Bottom - 10, 10, 10, 90, 90);
         tile.CloseFigure();
-        using var fill = new SolidBrush(Color.FromArgb(227, 239, 255));
-        using var pen = new Pen(Blue, 1.7f) { StartCap = LineCap.Round, EndCap = LineCap.Round };
+        using var fill = new SolidBrush(Blue);
+        using var pen = new Pen(Color.White, 1.7f) { StartCap = LineCap.Round, EndCap = LineCap.Round };
         g.FillPath(fill, tile);
         switch (key)
         {
@@ -255,7 +255,7 @@ public sealed class SettingsForm : Form
                 g.DrawRectangle(pen, center.X - 11, center.Y - 8, 22, 15);
                 for (int i = 0; i < 3; i++)
                     for (int j = 0; j < 2; j++)
-                        g.FillEllipse(Brushes.CornflowerBlue, center.X - 7 + i * 6, center.Y - 4 + j * 5, 2, 2);
+                        g.FillEllipse(Brushes.White, center.X - 7 + i * 6, center.Y - 4 + j * 5, 2, 2);
                 break;
         }
     }
@@ -320,7 +320,7 @@ public sealed class SettingsForm : Form
         }
         button.Resize += (_, _) => Round();
         Round();
-        button.MouseEnter += (_, _) => button.BackColor = primary ? Color.FromArgb(8, 87, 202) : Color.FromArgb(230, 238, 250);
+        button.MouseEnter += (_, _) => button.BackColor = primary ? Color.FromArgb(8, 56, 120) : Color.FromArgb(230, 238, 250);
         button.MouseLeave += (_, _) => button.BackColor = primary ? Blue : Color.White;
     }
     private void ResizeCards()
@@ -435,7 +435,7 @@ internal sealed class SwitchCheckBox : CheckBox
         path.AddArc(r.X, r.Y, 23, 23, 90, 180);
         path.AddArc(r.Right - 23, r.Y, 23, 23, 270, 180);
         path.CloseFigure();
-        using var background = new SolidBrush(Checked ? Color.FromArgb(19, 108, 231) : Color.FromArgb(179, 187, 202));
+        using var background = new SolidBrush(Checked ? SettingsForm.Blue : Color.FromArgb(179, 187, 202));
         e.Graphics.FillPath(background, path);
         using var knob = new SolidBrush(Color.White);
         e.Graphics.FillEllipse(knob, Checked ? r.Right - 21 : r.Left + 2, r.Top + 2, 19, 19);
