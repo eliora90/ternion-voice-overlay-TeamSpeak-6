@@ -24,7 +24,9 @@ class SettingsLayoutTests(unittest.TestCase):
 
     def test_header_shows_application_logo_instead_of_gear(self):
         self.assertIn('using var logo = Icon.ToBitmap();', SOURCE)
-        self.assertIn('e.Graphics.DrawImage(logo, new Rectangle(20, 16, 44, 44));', SOURCE)
+        self.assertIn('e.Graphics.DrawImage(logo, new Rectangle(34, 16, 44, 44));', SOURCE)
+        self.assertIn('title.Location = new Point(92, 7)', SOURCE)
+        self.assertIn('subtitle.Location = new Point(94, 39)', SOURCE)
         self.assertNotIn('TextRenderer.DrawText(e.Graphics, "⚙"', SOURCE)
 
     def test_behavior_switches_use_an_inset_block(self):
@@ -36,8 +38,16 @@ class SettingsLayoutTests(unittest.TestCase):
     def test_hotkey_dimensions_are_evenly_spaced(self):
         self.assertIn('dimensions.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 50));', SOURCE)
         self.assertIn('dimensions.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 50));', SOURCE)
-        self.assertIn('fontSize.Margin = new Padding(0, 0, 18, 0);', SOURCE)
-        self.assertIn('width.Margin = new Padding(0, 0, 0, 0);', SOURCE)
+        self.assertIn('fontSize.Margin = new Padding(0, 8, 18, 0);', SOURCE)
+        self.assertIn('width.Margin = new Padding(0, 8, 0, 0);', SOURCE)
+
+    def test_last_card_constrains_inner_tables_to_one_row(self):
+        self.assertIn('Height = 66, ColumnCount = 2, RowCount = 1', SOURCE)
+        self.assertIn('dimensions.RowStyles.Add(new RowStyle(SizeType.Percent, 100));', SOURCE)
+        self.assertIn('var fontPair = new TableLayoutPanel { Dock = DockStyle.Fill, ColumnCount = 2, RowCount = 1', SOURCE)
+        self.assertIn('fontPair.RowStyles.Add(new RowStyle(SizeType.Percent, 100));', SOURCE)
+        self.assertIn('var widthPair = new TableLayoutPanel { Dock = DockStyle.Fill, ColumnCount = 2, RowCount = 1', SOURCE)
+        self.assertIn('widthPair.RowStyles.Add(new RowStyle(SizeType.Percent, 100));', SOURCE)
 
     def test_section_icons_are_centered_in_their_tiles(self):
         self.assertIn('var center = new Point(r.X + r.Width / 2, r.Y + r.Height / 2);', SOURCE)
