@@ -6,6 +6,9 @@ namespace TernionOverlay;
 /// <summary>Скачивание и кэширование аватаров myTeamSpeak (фоном, без блокировки UI).</summary>
 public sealed class AvatarCache
 {
+    /// <summary>Верхний предел размера аватара: чужой сервер не должен забить диск.</summary>
+    private const long MaxAvatarBytes = 4L * 1024 * 1024;
+
     private readonly object _lock = new();
     private readonly Dictionary<string, Image?> _img = new();
     private readonly HashSet<string> _loading = new();
@@ -29,6 +32,12 @@ public sealed class AvatarCache
 
     private async Task LoadAsync(string url)
     {
+        // Адрес аватара приходит из ответа клиента TeamSpeak: берём только
+        // обычные веб-схемы, чтобы запрос не ушёл в локальный файл или иной обработчик.
+        if (!Uri.TryCreate(url, UriKind.Absolute, out var uri) ||
+            (uri.Scheme != Uri.UriSchemeHttps && uri.Scheme != Uri.UriSchemeHttp))
+            return;
+
         lock (_lock) { if (_loading.Contains(url)) return; _loading.Add(url); }
         try
         {
@@ -45,10 +54,28 @@ public sealed class AvatarCache
             {
                 try
                 {
-                    var bytes = await _http.GetByteArrayAsync(url).ConfigureAwait(false);
-                    // проверим, что это реально картинка
-                    using (var probe = Image.FromStream(new MemoryStream(bytes))) { }
-                    File.WriteAllBytes(path, bytes);
+                    using var resp = await _http.GetAsync(uri, HttpCompletionOption.ResponseHeadersRead).ConfigureAwait(false);
+                    var declared = resp.Content.Headers.ContentLength;
+                    if (resp.IsSuccessStatusCode && (declared is null || declared <= MaxAvatarBytes))
+                    {
+                        await using var net = await resp.Content.ReadAsStreamAsync().ConfigureAwait(false);
+                        using var buffer = new MemoryStream();
+                        var chunk = new byte[81920];
+                        int read;
+                        bool tooBig = false;
+                        while ((read = await net.ReadAsync(chunk).ConfigureAwait(false)) > 0)
+                        {
+                            buffer.Write(chunk, 0, read);
+                            if (buffer.Length > MaxAvatarBytes) { tooBig = true; break; }
+                        }
+                        if (!tooBig && buffer.Length > 0)
+                        {
+                            var bytes = buffer.ToArray();
+                            // проверим, что это реально картинка
+                            using (var probe = Image.FromStream(new MemoryStream(bytes))) { }
+                            File.WriteAllBytes(path, bytes);
+                        }
+                    }
                 }
                 catch { /* не получилось — оставим без аватара */ }
             }

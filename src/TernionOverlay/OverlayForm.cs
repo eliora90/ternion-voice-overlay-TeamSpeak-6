@@ -354,7 +354,7 @@ public sealed class OverlayForm : Form
         g.DrawEllipse(pen, r);
     }
 
-    // Выделение цвета отряда по имени канала (у вас Земля/Небо/Штурм/ДРГ).
+    // Необязательный цветовой акцент капсулы по названию канала (пример сопоставления).
     private static Color TeamColor(string channel)
     {
         string c = channel.ToLowerInvariant();

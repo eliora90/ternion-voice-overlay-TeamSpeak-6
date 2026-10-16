@@ -34,26 +34,26 @@ public static class Program
             return 1;
         }
 
-        Check("сервер", client.State.ServerName, "TERNION");
+        Check("сервер", client.State.ServerName, "Voice Server");
         Check("наш канал", client.State.OurChannelName, "Канал #1");
 
         var visible = client.State.Visible.Select(p => p.Id).ToHashSet();
-        Check("в канале есть eliora90", visible.Contains(35), true, "id 35 виден");
-        Check("в канале есть nekroman23", visible.Contains(20), true);
-        Check("НЕ в канале RKNcompany(37)", visible.Contains(37), false);
+        Check("в канале есть PlayerOne", visible.Contains(35), true, "id 35 виден");
+        Check("в канале есть PlayerTwo", visible.Contains(20), true);
+        Check("НЕ в канале PlayerThree(37)", visible.Contains(37), false);
 
         var me = client.State.All[35];
-        Check("описание eliora90 = Наташа", me.Description, "Наташа");
+        Check("описание PlayerOne = Алексей", me.Description, "Алексей");
         Check("при запуске старые участники не мигают", me.JoinedAtUtc == default, true);
-        Check("имя в подписи eliora90", me.DisplayName, "eliora90 (Наташа)");
+        Check("имя в подписи PlayerOne", me.DisplayName, "PlayerOne (Алексей)");
         Check("аватар распарсен", me.AvatarUrl, "https://ex/av.png");
-        Check("myTS тег", me.MyTsTag, "eliora90@myteamspeak.com");
+        Check("myTS тег", me.MyTsTag, "playerone@myteamspeak.com");
 
         await Task.Delay(1800).ConfigureAwait(false);
-        Check("обновление описания без переподключения", me.Description, "Наталья");
+        Check("обновление описания без переподключения", me.Description, "Александр");
         // после clientMoved(id37 -> ch25) должно стать видимо
-        Check("RKNcompany стал виден после clientMoved", client.State.Visible.Any(p => p.Id == 37), true);
-        Check("новый участник появился без перезапуска", client.State.Visible.Any(p => p.Id == 42 && p.Nickname == "Gravemace"), true);
+        Check("PlayerThree стал виден после clientMoved", client.State.Visible.Any(p => p.Id == 37), true);
+        Check("новый участник появился без перезапуска", client.State.Visible.Any(p => p.Id == 42 && p.Nickname == "Newcomer"), true);
         var flashTime = client.State.All[42].JoinedAtUtc;
         Check("у вошедшего есть время голубого мигания",
             flashTime > DateTime.UtcNow.AddSeconds(-2), true);
@@ -63,9 +63,9 @@ public static class Program
         Check("анимация заканчивается", JoinFlash.IsActive(DateTime.UtcNow.AddSeconds(-2), DateTime.UtcNow), false);
         Check("старые участники не мигают", JoinFlash.IsActive(default, DateTime.UtcNow), false);
         var rkn = client.State.All[37];
-        Check("RKNcompany говорит (flag/статус)", rkn.Talking, true);
+        Check("PlayerThree говорит (flag/статус)", rkn.Talking, true);
 
-        Check("сохранён apiKey", store.Saved ?? "", "f6b1ff57-c902-4fd7-a1f5-d3356a96c248");
+        Check("сохранён apiKey", store.Saved ?? "", "11111111-2222-3333-4444-555555555555");
 
         // An authorized TS client can be open without joining any voice server.
         // Re-auth should later recover the channel list without another permission prompt.
@@ -173,10 +173,10 @@ internal sealed class MockTsServer : IDisposable
                 await SendTextAsync(stream, Talk(20, 2)).ConfigureAwait(false); // 2 -> перестал
                 await Task.Delay(300).ConfigureAwait(false);
 
-                // переместить RKNcompany (37) из канала 26 в канал 25 (наш)
+                // переместить PlayerThree (37) из канала 26 в канал 25 (наш)
                 await SendTextAsync(stream, "{\"payload\":{\"clientId\":37,\"newChannelId\":\"25\",\"oldChannelId\":\"26\"},\"type\":\"clientMoved\"}").ConfigureAwait(false);
-                await SendTextAsync(stream, "{\"payload\":{\"clientId\":42,\"connectionId\":1,\"oldChannelId\":\"0\",\"newChannelId\":\"25\",\"properties\":{\"nickname\":\"Gravemace\",\"description\":\"\",\"inputMuted\":false,\"outputMuted\":false}},\"type\":\"clientMoved\"}").ConfigureAwait(false);
-                await SendTextAsync(stream, "{\"payload\":{\"clientId\":35,\"properties\":{\"description\":\"Наталья\"}},\"type\":\"clientPropertiesUpdated\"}").ConfigureAwait(false);
+                await SendTextAsync(stream, "{\"payload\":{\"clientId\":42,\"connectionId\":1,\"oldChannelId\":\"0\",\"newChannelId\":\"25\",\"properties\":{\"nickname\":\"Newcomer\",\"description\":\"\",\"inputMuted\":false,\"outputMuted\":false}},\"type\":\"clientMoved\"}").ConfigureAwait(false);
+                await SendTextAsync(stream, "{\"payload\":{\"clientId\":35,\"properties\":{\"description\":\"Александр\"}},\"type\":\"clientPropertiesUpdated\"}").ConfigureAwait(false);
                 await Task.Delay(1500).ConfigureAwait(false);
             }
         }
@@ -247,15 +247,15 @@ internal sealed class MockTsServer : IDisposable
     // Сборка auth-ответа как строго валидного JSON через JsonSerializer (не руками).
     private static string BuildAuth()
     {
-        var root = new { id = "24", parentId = "0", properties = new { name = "ИГРОВЫЕ КАНАЛЫ:", uniqueIdentifier = "x1" } };
+        var root = new { id = "24", parentId = "0", properties = new { name = "VOICE CHANNELS:", uniqueIdentifier = "x1" } };
         var ch25 = new { id = "25", parentId = "24", properties = new { name = "Канал #1" } };
         var ch26 = new { id = "26", parentId = "24", properties = new { name = "Канал #2" } };
 
         var clients = new object[] {
-            new { id = 35L, channelId = "25", properties = new { nickname = "eliora90", description = "Наташа", country = "RU", inputMuted = false, outputMuted = false, flagTalking = false, myteamspeakAvatar = "2,https://ex/av.png", myteamspeakId = "AQs/..", uniqueIdentifier = "HB/==", userTag = "{\"tag\":\"eliora90@myteamspeak.com\"}" } },
-            new { id = 20L, channelId = "25", properties = new { nickname = "nekroman23", description = "", country = "RU", inputMuted = false, outputMuted = false, flagTalking = false, userTag = "{\"tag\":\"nekroman23@myteamspeak.com\"}" } },
-            new { id = 21L, channelId = "25", properties = new { nickname = "AADRIGAMM", description = "", country = "RU", inputMuted = false, outputMuted = false, flagTalking = false } },
-            new { id = 37L, channelId = "26", properties = new { nickname = "RKNcompany", description = "", country = "RU", inputMuted = false, outputMuted = false, flagTalking = true } }
+            new { id = 35L, channelId = "25", properties = new { nickname = "PlayerOne", description = "Алексей", country = "RU", inputMuted = false, outputMuted = false, flagTalking = false, myteamspeakAvatar = "2,https://ex/av.png", myteamspeakId = "sampleMyTsId", uniqueIdentifier = "sampleUid==", userTag = "{\"tag\":\"playerone@myteamspeak.com\"}" } },
+            new { id = 20L, channelId = "25", properties = new { nickname = "PlayerTwo", description = "", country = "RU", inputMuted = false, outputMuted = false, flagTalking = false, userTag = "{\"tag\":\"playertwo@myteamspeak.com\"}" } },
+            new { id = 21L, channelId = "25", properties = new { nickname = "SquadMate", description = "", country = "RU", inputMuted = false, outputMuted = false, flagTalking = false } },
+            new { id = 37L, channelId = "26", properties = new { nickname = "PlayerThree", description = "", country = "RU", inputMuted = false, outputMuted = false, flagTalking = true } }
         };
 
         var conn = new {
@@ -265,12 +265,12 @@ internal sealed class MockTsServer : IDisposable
             },
             clientId = 35L,
             clientInfos = clients,
-            properties = new { name = "TERNION" }
+            properties = new { name = "Voice Server" }
         };
 
         var auth = new {
             payload = new {
-                apiKey = "f6b1ff57-c902-4fd7-a1f5-d3356a96c248",
+                apiKey = "11111111-2222-3333-4444-555555555555",
                 connections = new[] { conn }
             },
             status = new { code = 0 },
