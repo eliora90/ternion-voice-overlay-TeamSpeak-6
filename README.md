@@ -35,8 +35,7 @@ On the PC running the overlay, open **Settings → Names** and select **Nick + r
 
 1. Install and open the **TeamSpeak 6 client** on the **same Windows PC** that will run the overlay. Connect to your voice server and join a channel. No TeamSpeak server-side configuration is required.
 2. In TeamSpeak, open **Settings → Remote Apps** and make sure access is enabled. Check the local port: the overlay initially uses **5899**. If another Remote App (for example, Stream Deck) already uses a different port, configure the overlay to use **that same TS6 port** rather than changing the other app.
- <img width="756" height="978" alt="Снимок экрана 2026-10-16 163048" src="https://github.com/user-attachments/assets/946e8d36-893f-4db3-9f5e-d7a474128110" />
-
+<img width="1722" height="954" alt="Снимок экрана 2026-10-16 140401" src="https://github.com/user-attachments/assets/d60b2bbc-f8c8-4d85-bf96-c9eb26911c85" />
 
 
 3. Download the Windows EXE above, or build it using the instructions below. Place it in a permanent directory, such as `C:\Apps\TernionOverlay\`. A self-contained build does not require a separate .NET installation on the Windows PC.
@@ -47,8 +46,8 @@ On the PC running the overlay, open **Settings → Names** and select **Nick + r
 To see other players' names, ask them to follow the [Description instructions](#how-to-show-players-real-names).
 
 **Controls:** `Alt+T` shows/hides the panel; double-clicking the tray icon does the same. Select **Exit** in the tray to quit completely. Before replacing the EXE with a newer version, quit the older instance through the tray.
-Earlier settings preview (the v1.0 release uses the approved revised layout):
-<img width="770" height="878" alt="Earlier Ternion Overlay settings and player capsules preview" src="https://github.com/user-attachments/assets/d0083dd5-ee26-4704-a705-3e4afc9ca5fd" />
+<img width="756" height="978" alt="Снимок экрана 2026-10-16 163048" src="https://github.com/user-attachments/assets/5bca250d-9728-4998-9929-bf1328c9d748" />
+
 
 
 ### Local data
