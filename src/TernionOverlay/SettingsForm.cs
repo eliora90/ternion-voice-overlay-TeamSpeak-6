@@ -115,32 +115,46 @@ public sealed class SettingsForm : Form
         Add(display, Row("settings.alignment", alignment));
 
         var behavior = Card("section.behavior", "⚙");
+        var switches = new TableLayoutPanel { Dock = DockStyle.Top, Height = 144,
+            ColumnCount = 1, RowCount = 3, BackColor = Color.White,
+            Padding = new Padding(58, 8, 18, 18) };
+        for (int i = 0; i < 3; i++) switches.RowStyles.Add(new RowStyle(SizeType.Percent, 100f / 3));
+        int switchRow = 0;
         foreach (var (box, key) in new[] { (autoWindows, "settings.autostart.win"),
             (autoTs, "settings.autostart.ts"), (clickThrough, "settings.clickthrough") })
         {
             box.Appearance = Appearance.Normal;
-            box.AutoSize = false; box.Height = 36; box.Dock = DockStyle.Top;
-            box.Margin = new Padding(55, 0, 12, 0);
+            box.AutoSize = false; box.Dock = DockStyle.Fill;
+            box.Margin = new Padding(0, 0, 0, 0);
             box.BackColor = Color.White; box.ForeColor = Ink;
             toggles[box] = key;
-            Add(behavior, box);
+            switches.Controls.Add(box, 0, switchRow++);
         }
+        Add(behavior, switches);
 
         var appearance = Card("section.hotkeys", "⌨");
         Add(appearance, Row("settings.hotkey", hotkey));
         fontSize.Minimum = 10; fontSize.Maximum = 26;
         width.Minimum = 180; width.Maximum = 700; width.Increment = 10;
-        var dimensions = new TableLayoutPanel { Dock = DockStyle.Top, Height = 52, ColumnCount = 4,
-            Padding = new Padding(55, 6, 15, 12), BackColor = Color.White };
-        dimensions.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 23));
-        dimensions.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 18));
-        dimensions.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 39));
-        dimensions.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 20));
-        dimensions.Controls.Add(Label("settings.fontsize"), 0, 0);
-        dimensions.Controls.Add(fontSize, 1, 0);
-        dimensions.Controls.Add(Label("settings.width"), 2, 0);
-        dimensions.Controls.Add(width, 3, 0);
+        var dimensions = new TableLayoutPanel { Dock = DockStyle.Top, Height = 58, ColumnCount = 2,
+            Padding = new Padding(58, 6, 18, 16), BackColor = Color.White };
+        dimensions.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 50));
+        dimensions.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 50));
+        var fontPair = new TableLayoutPanel { Dock = DockStyle.Fill, ColumnCount = 2, Margin = Padding.Empty };
+        fontPair.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 65));
+        fontPair.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 35));
+        fontPair.Controls.Add(Label("settings.fontsize"), 0, 0);
+        fontPair.Controls.Add(fontSize, 1, 0);
+        var widthPair = new TableLayoutPanel { Dock = DockStyle.Fill, ColumnCount = 2, Margin = Padding.Empty };
+        widthPair.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 66));
+        widthPair.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 34));
+        widthPair.Controls.Add(Label("settings.width"), 0, 0);
+        widthPair.Controls.Add(width, 1, 0);
+        fontSize.Margin = new Padding(0, 0, 18, 0);
+        width.Margin = new Padding(0, 0, 0, 0);
         fontSize.Dock = DockStyle.Fill; width.Dock = DockStyle.Fill;
+        dimensions.Controls.Add(fontPair, 0, 0);
+        dimensions.Controls.Add(widthPair, 1, 0);
         Add(appearance, dimensions);
 
         // Lay out children explicitly so WinForms Dock/Z-order cannot reverse the sections.
@@ -198,6 +212,7 @@ public sealed class SettingsForm : Form
     {
         g.SmoothingMode = SmoothingMode.AntiAlias;
         var r = new Rectangle(16, 6, 32, 32);
+        var center = new Point(r.X + r.Width / 2, r.Y + r.Height / 2);
         using var tile = new GraphicsPath();
         tile.AddArc(r.X, r.Y, 10, 10, 180, 90);
         tile.AddArc(r.Right - 10, r.Y, 10, 10, 270, 90);
@@ -226,21 +241,21 @@ public sealed class SettingsForm : Form
                 g.DrawEllipse(pen, 39, 18, 5, 5);
                 break;
             case "section.behavior":
-                g.DrawEllipse(pen, 23, 13, 18, 18);
-                g.DrawEllipse(pen, 29, 19, 6, 6);
+                g.DrawEllipse(pen, center.X - 9, center.Y - 9, 18, 18);
+                g.DrawEllipse(pen, center.X - 3, center.Y - 3, 6, 6);
                 for (int i = 0; i < 8; i++)
                 {
                     double a = i * Math.PI / 4;
-                    int x1 = 32 + (int)(10 * Math.Cos(a)), y1 = 22 + (int)(10 * Math.Sin(a));
-                    int x2 = 32 + (int)(12 * Math.Cos(a)), y2 = 22 + (int)(12 * Math.Sin(a));
+                    int x1 = center.X + (int)(10 * Math.Cos(a)), y1 = center.Y + (int)(10 * Math.Sin(a));
+                    int x2 = center.X + (int)(12 * Math.Cos(a)), y2 = center.Y + (int)(12 * Math.Sin(a));
                     g.DrawLine(pen, x1, y1, x2, y2);
                 }
                 break;
             default:
-                g.DrawRectangle(pen, 21, 15, 22, 15);
+                g.DrawRectangle(pen, center.X - 11, center.Y - 8, 22, 15);
                 for (int i = 0; i < 3; i++)
                     for (int j = 0; j < 2; j++)
-                        g.FillEllipse(Brushes.CornflowerBlue, 25 + i * 6, 19 + j * 5, 2, 2);
+                        g.FillEllipse(Brushes.CornflowerBlue, center.X - 7 + i * 6, center.Y - 4 + j * 5, 2, 2);
                 break;
         }
     }
