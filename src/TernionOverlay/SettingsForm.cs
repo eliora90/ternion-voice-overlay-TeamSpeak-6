@@ -36,6 +36,7 @@ public sealed class SettingsForm : Form
         Font = new Font("Segoe UI", 9.5f);
         AutoScaleMode = AutoScaleMode.Dpi;
         FormBorderStyle = FormBorderStyle.None;
+        Icon = Icon.ExtractAssociatedIcon(Environment.ProcessPath!);
         StartPosition = FormStartPosition.CenterScreen;
         MinimumSize = new Size(540, 480);
         Size = new Size(760, 874);

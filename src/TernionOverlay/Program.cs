@@ -120,7 +120,7 @@ internal static class Program
 
         _tray = new NotifyIcon
         {
-            Icon = MakeIcon(),
+            Icon = Icon.ExtractAssociatedIcon(Environment.ProcessPath!),
             ContextMenuStrip = menu,
             Text = Lang.T("tray.tooltip"),
             Visible = true
@@ -135,20 +135,6 @@ internal static class Program
             menu.Items[1].Text = Lang.T(_overlay.IsMoveMode ? "tray.lock" : "tray.move");
     }
 
-    private static Icon MakeIcon()
-    {
-        using var bmp = new Bitmap(16, 16);
-        using (var g = Graphics.FromImage(bmp))
-        {
-            g.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.AntiAlias;
-            g.Clear(Color.Transparent);
-            using var ring = new Pen(Color.FromArgb(255, 200, 90), 2f);
-            g.DrawEllipse(ring, 2, 2, 12, 12);
-            g.FillEllipse(Brushes.LimeGreen, 6, 6, 4, 4);
-        }
-        IntPtr hIcon = bmp.GetHicon();
-        return Icon.FromHandle(hIcon);
-    }
 
     private static void ApplyHotkey()
     {
