@@ -47,6 +47,7 @@ On the PC running the overlay, open **Settings → Names** and select **Nick + r
 To see other players' names, ask them to follow the [Description instructions](#how-to-show-players-real-names).
 
 **Controls:** `Alt+T` shows/hides the panel; double-clicking the tray icon does the same. Select **Exit** in the tray to quit completely. Before replacing the EXE with a newer version, quit the older instance through the tray.
+
 <img width="756" height="978" alt="Снимок экрана 2026-10-16 163048" src="https://github.com/user-attachments/assets/5bca250d-9728-4998-9929-bf1328c9d748" />
 
 <img width="2557" height="1439" alt="Снимок экрана 2026-10-16 174508" src="https://github.com/user-attachments/assets/69d96ecc-1ebc-4e70-91b9-955e34fc25c8" />
