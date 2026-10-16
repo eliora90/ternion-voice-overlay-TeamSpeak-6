@@ -16,8 +16,16 @@ class SettingsLayoutTests(unittest.TestCase):
                         'Section icon tiles should use the approved blue')
         self.assertTrue('using var pen = new Pen(Color.White, 1.7f)' in SOURCE,
                         'White symbols should remain legible on blue tiles')
-        self.assertTrue('e.Graphics.FillEllipse(brush, 20, 16, 44, 44);' in SOURCE)
-        self.assertTrue('using var brush = new SolidBrush(Blue);' in SOURCE)
+
+    def test_tall_window_and_short_screen_fallback(self):
+        self.assertIn('Size = new Size(760, 960);', SOURCE)
+        self.assertIn('body.AutoScroll = true;', SOURCE)
+        self.assertIn('Math.Min(Height, r.Height)', SOURCE)
+
+    def test_header_shows_application_logo_instead_of_gear(self):
+        self.assertIn('using var logo = Icon.ToBitmap();', SOURCE)
+        self.assertIn('e.Graphics.DrawImage(logo, new Rectangle(20, 16, 44, 44));', SOURCE)
+        self.assertNotIn('TextRenderer.DrawText(e.Graphics, "⚙"', SOURCE)
 
     def test_behavior_switches_use_an_inset_block(self):
         self.assertIn('var switches = new TableLayoutPanel', SOURCE)

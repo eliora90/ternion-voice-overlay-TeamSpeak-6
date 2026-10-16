@@ -39,7 +39,7 @@ public sealed class SettingsForm : Form
         Icon = Icon.ExtractAssociatedIcon(Environment.ProcessPath!);
         StartPosition = FormStartPosition.CenterScreen;
         MinimumSize = new Size(540, 480);
-        Size = new Size(760, 874);
+        Size = new Size(760, 960);
         BackColor = Canvas;
         Build();
         LoadValues();
@@ -59,10 +59,10 @@ public sealed class SettingsForm : Form
         header.Cursor = Cursors.SizeAll;
         header.MouseDown += DragWindow;
         header.Paint += (_, e) => {
-            e.Graphics.SmoothingMode = SmoothingMode.AntiAlias;
-            using var brush = new SolidBrush(Blue);
-            e.Graphics.FillEllipse(brush, 20, 16, 44, 44);
-            TextRenderer.DrawText(e.Graphics, "⚙", new Font("Segoe UI Symbol", 19), new Rectangle(24, 20, 38, 36), Color.White);
+            if (Icon is null) return;
+            e.Graphics.InterpolationMode = InterpolationMode.HighQualityBicubic;
+            using var logo = Icon.ToBitmap();
+            e.Graphics.DrawImage(logo, new Rectangle(20, 16, 44, 44));
         };
         title.Font = new Font("Segoe UI", 15, FontStyle.Bold); title.ForeColor = Ink;
         title.Location = new Point(78, 7); title.AutoSize = true;
@@ -91,7 +91,7 @@ public sealed class SettingsForm : Form
         frame.Controls.Add(footer, 0, 2);
 
         body.Dock = DockStyle.Fill; body.FlowDirection = FlowDirection.TopDown;
-        body.WrapContents = false; body.AutoScroll = false;
+        body.WrapContents = false; body.AutoScroll = true;
         body.Padding = new Padding(18, 2, 18, 0); body.BackColor = Canvas;
         frame.Controls.Add(body, 0, 1);
         body.Resize += (_, _) => ResizeCards();
