@@ -25,7 +25,7 @@ public sealed class SettingsForm : Form
     private readonly TextBox hotkey = new();
     internal static readonly Color Blue = Color.FromArgb(12, 74, 160); // #0C4AA0
     private static readonly Color Ink = Color.FromArgb(20, 30, 52);
-    private static readonly Color Canvas = Color.FromArgb(239, 244, 251);
+    private static readonly Color Canvas = Color.FromArgb(239, 247, 255);
 
     public SettingsForm(AppConfig cfg, Action apply)
     {
@@ -39,7 +39,7 @@ public sealed class SettingsForm : Form
         Icon = Icon.ExtractAssociatedIcon(Environment.ProcessPath!);
         StartPosition = FormStartPosition.CenterScreen;
         MinimumSize = new Size(540, 480);
-        Size = new Size(760, 960);
+        Size = new Size(760, 980);
         BackColor = Canvas;
         Build();
         LoadValues();
@@ -92,7 +92,7 @@ public sealed class SettingsForm : Form
 
         body.Dock = DockStyle.Fill; body.FlowDirection = FlowDirection.TopDown;
         body.WrapContents = false; body.AutoScroll = true;
-        body.Padding = new Padding(18, 2, 18, 0); body.BackColor = Canvas;
+        body.Padding = new Padding(26, 2, 26, 0); body.BackColor = Canvas;
         frame.Controls.Add(body, 0, 1);
         body.Resize += (_, _) => ResizeCards();
 
@@ -115,9 +115,9 @@ public sealed class SettingsForm : Form
         Add(display, Row("settings.alignment", alignment));
 
         var behavior = Card("section.behavior", "⚙");
-        var switches = new TableLayoutPanel { Dock = DockStyle.Top, Height = 144,
+        var switches = new TableLayoutPanel { Dock = DockStyle.Top, Height = 116,
             ColumnCount = 1, RowCount = 3, BackColor = Color.White,
-            Padding = new Padding(58, 8, 18, 18) };
+            Padding = new Padding(66, 8, 18, 12) };
         for (int i = 0; i < 3; i++) switches.RowStyles.Add(new RowStyle(SizeType.Percent, 100f / 3));
         int switchRow = 0;
         foreach (var (box, key) in new[] { (autoWindows, "settings.autostart.win"),
@@ -133,33 +133,37 @@ public sealed class SettingsForm : Form
         Add(behavior, switches);
 
         var appearance = Card("section.hotkeys", "⌨");
-        Add(appearance, Row("settings.hotkey", hotkey));
         fontSize.Minimum = 10; fontSize.Maximum = 26;
         width.Minimum = 180; width.Maximum = 700; width.Increment = 10;
-        var dimensions = new TableLayoutPanel { Dock = DockStyle.Top, Height = 66, ColumnCount = 2, RowCount = 1,
-            Padding = new Padding(58, 4, 18, 18), BackColor = Color.White };
-        dimensions.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 50));
-        dimensions.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 50));
-        dimensions.RowStyles.Add(new RowStyle(SizeType.Percent, 100));
-        var fontPair = new TableLayoutPanel { Dock = DockStyle.Fill, ColumnCount = 2, RowCount = 1, Margin = Padding.Empty };
-        fontPair.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 65));
-        fontPair.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 35));
-        fontPair.RowStyles.Add(new RowStyle(SizeType.Percent, 100));
-        fontPair.Controls.Add(Label("settings.fontsize"), 0, 0);
-        fontPair.Controls.Add(fontSize, 1, 0);
-        var widthPair = new TableLayoutPanel { Dock = DockStyle.Fill, ColumnCount = 2, RowCount = 1, Margin = Padding.Empty };
-        widthPair.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 66));
-        widthPair.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 34));
-        widthPair.RowStyles.Add(new RowStyle(SizeType.Percent, 100));
-        widthPair.Controls.Add(Label("settings.width"), 0, 0);
-        widthPair.Controls.Add(width, 1, 0);
-        fontSize.Margin = new Padding(0, 8, 18, 0);
-        width.Margin = new Padding(0, 8, 0, 0);
-        fontSize.Anchor = AnchorStyles.Left | AnchorStyles.Right;
-        width.Anchor = AnchorStyles.Left | AnchorStyles.Right;
-        dimensions.Controls.Add(fontPair, 0, 0);
-        dimensions.Controls.Add(widthPair, 1, 0);
-        Add(appearance, dimensions);
+        // The separate reference has three full-width rows, not two paired
+        // numeric controls. Explicit rows also prevent preferred-size overflow.
+        var hotkeyRows = new TableLayoutPanel { Dock = DockStyle.Top,
+            Height = 153, ColumnCount = 2, RowCount = 3,
+            Padding = new Padding(66, 0, 18, 0), BackColor = Color.White };
+        hotkeyRows.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 44));
+        hotkeyRows.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 56));
+        for (int i = 0; i < 3; i++)
+            hotkeyRows.RowStyles.Add(new RowStyle(SizeType.Absolute, 51));
+        hotkeyRows.Controls.Add(Label("settings.hotkey"), 0, 0);
+        hotkeyRows.Controls.Add(Label("settings.fontsize"), 0, 1);
+        hotkeyRows.Controls.Add(Label("settings.width"), 0, 2);
+        hotkey.Anchor = AnchorStyles.Left | AnchorStyles.Right;
+        hotkey.Margin = new Padding(0, 11, 0, 9);
+        hotkeyRows.Controls.Add(hotkey, 1, 0);
+        foreach (var numeric in new[] { fontSize, width })
+        {
+            numeric.Width = 110;
+            numeric.Anchor = AnchorStyles.Right;
+            numeric.Margin = new Padding(0, 11, 0, 9);
+        }
+        hotkeyRows.Controls.Add(fontSize, 1, 1);
+        hotkeyRows.Controls.Add(width, 1, 2);
+        hotkeyRows.Paint += (_, e) => {
+            using var line = new Pen(Color.FromArgb(223, 233, 245));
+            e.Graphics.DrawLine(line, 66, 51, hotkeyRows.Width - 18, 51);
+            e.Graphics.DrawLine(line, 66, 102, hotkeyRows.Width - 18, 102);
+        };
+        Add(appearance, hotkeyRows);
 
         // Lay out children explicitly so WinForms Dock/Z-order cannot reverse the sections.
         foreach (var card in cards)
@@ -188,10 +192,10 @@ public sealed class SettingsForm : Form
     private Panel Card(string key, string icon)
     {
         var card = new RoundedCard { BackColor = Color.White, Width = 680,
-            Margin = new Padding(0, 0, 0, 8) };
+            Margin = new Padding(0, 0, 0, 10) };
         var head = new Panel { Height = 42, BackColor = Color.White };
         head.Paint += (_, e) => DrawSectionIcon(e.Graphics, key);
-        var caption = new Label { AutoSize = true, UseMnemonic = false, Location = new Point(58, 10),
+        var caption = new Label { AutoSize = true, UseMnemonic = false, Location = new Point(66, 10),
             Font = new Font("Segoe UI", 11, FontStyle.Bold), ForeColor = Ink };
         labels[caption] = key; head.Controls.Add(caption); card.Controls.Add(head);
         card.Tag = new List<Control> { head };
@@ -268,7 +272,7 @@ public sealed class SettingsForm : Form
     {
         var row = new TableLayoutPanel { Dock = DockStyle.Top, Height = hint is null ? 33 : 47,
             ColumnCount = 3, RowCount = hint is null ? 1 : 2,
-            Padding = new Padding(58, 1, 18, 1), BackColor = Color.White };
+            Padding = new Padding(66, 1, 18, 1), BackColor = Color.White };
         row.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 44));
         row.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 48));
         row.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 8));

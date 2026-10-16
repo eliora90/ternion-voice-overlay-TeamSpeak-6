@@ -24,9 +24,14 @@ class SettingsLayoutTests(unittest.TestCase):
                         'White symbols should remain legible on blue tiles')
 
     def test_tall_window_and_short_screen_fallback(self):
-        self.assertIn('Size = new Size(760, 960);', SOURCE)
+        self.assertIn('Size = new Size(760, 980);', SOURCE)
         self.assertIn('body.AutoScroll = true;', SOURCE)
         self.assertIn('Math.Min(Height, r.Height)', SOURCE)
+
+    def test_reference_uses_airy_light_blue_cards(self):
+        self.assertIn('Canvas = Color.FromArgb(239, 247, 255)', SOURCE)
+        self.assertIn('body.Padding = new Padding(26, 2, 26, 0)', SOURCE)
+        self.assertIn('Margin = new Padding(0, 0, 0, 10)', SOURCE)
 
     def test_header_shows_application_logo_instead_of_gear(self):
         self.assertIn('using var logo = Icon.ToBitmap();', SOURCE)
@@ -37,23 +42,21 @@ class SettingsLayoutTests(unittest.TestCase):
 
     def test_behavior_switches_use_an_inset_block(self):
         self.assertIn('var switches = new TableLayoutPanel', SOURCE)
-        self.assertIn('Padding = new Padding(58, 8, 18, 18)', SOURCE)
+        self.assertIn('Height = 116,', SOURCE)
+        self.assertIn('Padding = new Padding(66, 8, 18, 12)', SOURCE)
         self.assertIn('Add(behavior, switches);', SOURCE)
         self.assertNotIn('Add(behavior, box);', SOURCE)
 
-    def test_hotkey_dimensions_are_evenly_spaced(self):
-        self.assertIn('dimensions.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 50));', SOURCE)
-        self.assertIn('dimensions.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 50));', SOURCE)
-        self.assertIn('fontSize.Margin = new Padding(0, 8, 18, 0);', SOURCE)
-        self.assertIn('width.Margin = new Padding(0, 8, 0, 0);', SOURCE)
-
-    def test_last_card_constrains_inner_tables_to_one_row(self):
-        self.assertIn('Height = 66, ColumnCount = 2, RowCount = 1', SOURCE)
-        self.assertIn('dimensions.RowStyles.Add(new RowStyle(SizeType.Percent, 100));', SOURCE)
-        self.assertIn('var fontPair = new TableLayoutPanel { Dock = DockStyle.Fill, ColumnCount = 2, RowCount = 1', SOURCE)
-        self.assertIn('fontPair.RowStyles.Add(new RowStyle(SizeType.Percent, 100));', SOURCE)
-        self.assertIn('var widthPair = new TableLayoutPanel { Dock = DockStyle.Fill, ColumnCount = 2, RowCount = 1', SOURCE)
-        self.assertIn('widthPair.RowStyles.Add(new RowStyle(SizeType.Percent, 100));', SOURCE)
+    def test_hotkey_card_uses_three_separated_full_width_rows(self):
+        self.assertIn('var hotkeyRows = new TableLayoutPanel', SOURCE)
+        self.assertIn('Height = 153, ColumnCount = 2, RowCount = 3', SOURCE)
+        self.assertIn('hotkeyRows.RowStyles.Add(new RowStyle(SizeType.Absolute, 51));', SOURCE)
+        self.assertIn('hotkeyRows.Controls.Add(hotkey, 1, 0);', SOURCE)
+        self.assertIn('hotkeyRows.Controls.Add(fontSize, 1, 1);', SOURCE)
+        self.assertIn('hotkeyRows.Controls.Add(width, 1, 2);', SOURCE)
+        self.assertIn('e.Graphics.DrawLine(line, 66, 51, hotkeyRows.Width - 18, 51);', SOURCE)
+        self.assertIn('e.Graphics.DrawLine(line, 66, 102, hotkeyRows.Width - 18, 102);', SOURCE)
+        self.assertNotIn('Add(appearance, Row("settings.hotkey", hotkey));', SOURCE)
 
     def test_section_icons_are_centered_in_their_tiles(self):
         self.assertIn('var center = new Point(r.X + r.Width / 2, r.Y + r.Height / 2);', SOURCE)
