@@ -90,4 +90,16 @@ Design updates and collecting feedback.
 
 ## Status and distribution
 
-This repository remains private. `dist/`, `bin/`, `obj/` and user configuration are excluded from Git; the v1.0 EXE is distributed as a release asset. No open-distribution license has been selected yet.
+This repository remains private. `dist/`, `bin/`, `obj/` and user configuration are excluded from Git; the v1.0 EXE is distributed as a release asset.
+
+## Privacy notes
+
+- The overlay talks only to the TeamSpeak client on `127.0.0.1` (the port you configure) and sends no telemetry.
+- The only outbound request is downloading a participant's myTeamSpeak avatar. Avatars are limited to ordinary `http`/`https` addresses and to 4 MB, and are cached under `%AppData%\TernionOverlay\avatars\`.
+- The TeamSpeak authorization key is stored unencrypted in `%AppData%\TernionOverlay\apikey.txt` and is only sent to your local TeamSpeak client. Do not share that file.
+- Enabling auto-start writes the executable path to `HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Run`. Disable the option to remove it.
+- The overlay reads only the TeamSpeak data an authorized Remote Apps connection provides; it does not read game memory, inject into games, or capture your screen.
+
+## License
+
+Released under the [MIT License](LICENSE).
