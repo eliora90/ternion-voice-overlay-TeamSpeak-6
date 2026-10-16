@@ -20,7 +20,9 @@ avatars/
 *.key
 *.pem
 
-# Editor and system files
+# Editor, Python test cache and system files
+__pycache__/
+*.pyc
 .DS_Store
 Thumbs.db
 .idea/
