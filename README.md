@@ -1,86 +1,78 @@
-# Ternion Overlay для TeamSpeak 6
+# Ternion Overlay for TeamSpeak 6
 
-Локальный оверлей для **Windows 10/11 x64**, который показывает кто из участников вашего текущего голосового канала TeamSpeak 6 сейчас разговаривает. Подключается к **клиенту TeamSpeak на том же компьютере** через его интерфейс «Удаленные приложения» (Remote Apps), а не напрямую к голосовому серверу. Отдельный бот или доступ администратора сервера не нужны.
+**English** · [Русский](README.ru.md)
 
-> Проект в стадии тестирования. Работа поверх полноэкранной игры зависит от режима вывода игры и Windows; для начала проверьте оверлей в оконном или безрамочном режиме. Это не официальное приложение TeamSpeak.
+A local overlay for **Windows 10/11 x64** that displays the people in your current TeamSpeak 6 voice channel over desktop windows and games. It connects to the **TeamSpeak client running on the same PC** through Remote Apps—not directly to the voice server. You do not need a server administrator account or a separate bot.
 
-## Возможности
+> This project is still being tested. Whether it appears over a full-screen game depends on the game's display mode and Windows. Try a windowed or borderless game first. This is not an official TeamSpeak app.
 
-- Интерфейс на английском и русском языках.
-- Отдельная тёмная капсула для каждого участника текущего канала; ширина подстраивается под содержимое и аватар. Новые участники появляются без перезапуска, их капсула коротко мигает голубым и становится серой.
-- При активном микрофоне ник меняет подсветку на зеленый; выключенные микрофон и звук — разные красные значки.
-- Ник либо `ник (имя из Описания)`, если описание заполнено. Имя не подставляется вручную.
-- Аватар myTeamSpeak (если доступен) слева или справа; без аватара нет заглушки.
-- Показ всех участников или только говорящих, выравнивание капсул по левому/правому краю, размер шрифта и минимальная ширина окна.
-- Прозрачное пространство между капсулами, режим кликов насквозь, блокировка/разблокировка перемещения, скрытие через трей или горячую клавишу `Alt+T`.
-- Порт TS6 можно менять в настройках.
-- Опциональный автозапуск вместе с Windows.
+## Features
 
-## Как показать настоящие имена игроков
+- A separate dark, rounded capsule for each participant in your current channel. The capsule grows to fit the name and avatar. New arrivals appear without restarting the app: their capsule briefly flashes blue, then returns to gray.
+- A speaking participant gets a green name and outline. Separate red icons indicate a muted microphone and muted audio.
+- Show the nickname alone or `nickname (name from Description)` when the participant has filled in their Description. No name is guessed or entered by the overlay.
+- Show a myTeamSpeak avatar (when available) on either side. No placeholder avatar is shown when one is unavailable.
+- Show everyone or only speakers; align capsules to the left or right; adjust font size and minimum panel width.
+- Transparent space between capsules, optional click-through, lock/unlock for dragging, and show/hide from the tray or with `Alt+T`.
+- English and Russian interface, configurable TS6 port, and optional Windows auto-start.
 
-**Каждый игрок, чьё имя хочется видеть в оверлее, должен сам заполнить поле «Описание» у своего клиента на сервере TeamSpeak.** Оверлей не узнаёт имена из Steam или из списка контактов и не может придумать имя за другого участника. Если описание пустое, показывается только ник. Устанавливать оверлей всем игрокам не нужно: его запускает лишь тот, кому нужен список на экране. Эта функция будет полезна тем, кто играет в большой компании, для удобства общения.
+## How to show players' real names
 
-Инструкция для **каждого** игрока:
+**Each player whose name you want to see must fill in the Description field for their own client in TeamSpeak.** The overlay does not get names from Steam or contacts, and it cannot infer someone else's name. An empty Description means only the nickname is shown. Other players do **not** need to install the overlay; only the person viewing it does.
 
-1. Подключитесь к голосовому серверу в TeamSpeak 6.
-2. Нажмите на **свой ник** в списке клиентов и затем на значок **карандаша** («Редактирование настроек клиента»).
-3. В поле **«Описание»** впишите имя, которое хотите показывать, например `Алексей`. Это описание **клиента**, а не описание сервера или канала.
-4. Нажмите **«Готово»**, чтобы сохранить изменение.
+Instructions for **each** player:
 
-У того, кто запускает оверлей: откройте **Settings / Настройки → Имена** и выберите **«Ник + настоящее имя из описания»** (в английском интерфейсе *Nick + real name from description*). Тогда участник отобразится как `Ник (Алексей)`. Если выбран режим **«Только ник»**, описание скрыто даже при заполненном поле. Если после изменения имя не появилось сразу, проверьте, что изменение сохранилось в TeamSpeak, и переподключитесь к серверу для обновления данных.
+1. Connect to a voice server in TeamSpeak 6.
+2. Click **your own nickname** in the client list, then the **pencil/edit icon** for client settings.
+3. Enter the name you want shown (for example, `Alex`) in **Description**. This is the **client's Description**, not the server or channel description.
+4. Save the change with **Done** (or the corresponding button in your client language).
 
-## Как запустить
+On the PC running the overlay, open **Settings → Names** and select **Nick + real name from description**. The player will then appear as `Nickname (Alex)`. If **Nickname only** is selected, Description is hidden even if it is filled in. If a recently edited name does not appear, confirm it was saved in TeamSpeak and reconnect to the voice server to refresh the data.
 
-1. Установите и откройте **клиент TeamSpeak 6** на том же Windows-ПК, где будет оверлей. Подключитесь в нём к голосовому серверу и каналу. Сам сервер TeamSpeak настраивать не нужно.
-2. В клиенте откройте **Настройки → Удаленные приложения** и убедитесь, что доступ включён. Посмотрите номер локального порта; первоначальное значение оверлея — **5899**. Если у клиента другой порт, укажите его в настройках оверлея.
-   > Будьте внимательны, если у вас уже подключены другие удаленные приложения и плагины. Порт везде должен совпадать. Если у вас подключен, например, Stream Deck по порту 5898, то просто в настройках оверлея поставьте порт 5898, чтобы не перенастраивать Stream Deck.
-   <img width="1722" height="954" alt="Снимок экрана 2026-10-16 140401" src="https://github.com/user-attachments/assets/26e71f85-cbfe-4ce1-8b78-33120d42b147" />
+## Getting started
 
-4. Получите собранный `TernionOverlay.exe` от владельца приватного проекта **или соберите его по инструкции ниже**. Разместите EXE в постоянной папке, например `C:\Apps\TernionOverlay\` или на рабочий стол. Самодостаточной сборке не требуется отдельная установка .NET на Windows.
-5. Запустите EXE. При первом подключении TeamSpeak может показать запрос разрешения для **Ternion Overlay** в разделе "Настройки- Расширения" — разрешите его в клиенте. Приложение появится в списке разрешённых; при следующих запусках повторного запроса обычно нет. Ключ разрешения оверлей хранит локально в профиле Windows.
-6. Если окно не появилось или видна строка статуса, проверьте: клиент TS6 запущен; оверлей и клиент используют **один порт**; разрешение выдано; клиент **подключён к голосовому серверу и находится в канале**. Разрешение приложения и подключение клиента к серверу — разные условия.
-7. Найдите иконку Ternion в системном трее (при необходимости откройте скрытые значки). Через меню **Settings / Настройки** выберите язык, выравнивание, показ имён, аватаров и другие параметры. Чтобы переместить оверлей, выберите **Move overlay / Переместить оверлей**, перетащите его за видимую капсулу и затем выберите **Lock overlay / Заблокировать оверлей**. В заблокированном состоянии при включённом click-through клики проходят в игру.
+1. Install and open the **TeamSpeak 6 client** on the **same Windows PC** that will run the overlay. Connect to your voice server and join a channel. No TeamSpeak server-side configuration is required.
+2. In TeamSpeak, open **Settings → Remote Apps** and make sure access is enabled. Check the local port: the overlay initially uses **5899**. If your client uses a different port, enter it in the overlay settings.
+3. Obtain a built `TernionOverlay.exe` from the private project owner **or build it using the instructions below**. Place it in a permanent directory, such as `C:\Apps\TernionOverlay\`. A self-contained build does not require a separate .NET installation on the Windows PC.
+4. Run the EXE. On first connection, TeamSpeak may ask you to authorize **Ternion Overlay**; allow it in the client. The app will appear in the authorized-apps list, and later launches normally do not prompt again. Its authorization key is stored locally in your Windows profile.
+5. If the panel does not appear or shows a status message, check that TS6 is running; the **ports match**; access was authorized; and the TS6 client is **connected to a voice server and in a channel**. App authorization and connection to the voice server are separate conditions.
+6. Find the Ternion icon in the system tray (expand hidden icons if necessary). Open **Settings** to choose the language, alignment, name mode, avatars and other options. To reposition the overlay, choose **Move overlay (unlock)** from the tray, drag a visible capsule, then choose **Lock overlay (click-through)**. When locked, clicks pass through to the game if click-through is enabled.
 
-<img width="759" height="874" alt="Снимок экрана 2026-10-16 140522" src="https://github.com/user-attachments/assets/46572cab-ca3a-4523-a8b3-1e512ef6a7b4" />
+To see other players' names, ask them to follow the [Description instructions](#how-to-show-players-real-names).
 
+**Controls:** `Alt+T` shows/hides the panel; double-clicking the tray icon does the same. Select **Exit** in the tray to quit completely. Before replacing the EXE with a newer version, quit the older instance through the tray.
 
-Чтобы увидеть имена других игроков, попросите их выполнить [инструкцию по заполнению «Описания»](#как-показать-настоящие-имена-игроков).
+### Local data
 
-**Управление:** `Alt+T` скрывает/показывает панель; двойной щелчок по иконке трея делает то же самое. Для полного выхода используйте пункт **Exit / Выход** в трее. Перед заменой EXE новой версией полностью закройте старую копию через трей.
+Settings are stored in `%AppData%\TernionOverlay\config.json`, the local authorization key in `%AppData%\TernionOverlay\apikey.txt`, and avatar cache files in `%AppData%\TernionOverlay\avatars\`. These files are **not uploaded to the repository** and should not be shared. Deleting only the EXE does not reset your settings.
 
-### Где хранятся данные
+## Building from source
 
-Настройки — `%AppData%\TernionOverlay\config.json`, локальный ключ разрешения — `%AppData%\TernionOverlay\apikey.txt`, кэш аватаров — `%AppData%\TernionOverlay\avatars\`. Эти файлы **не загружаются в репозиторий** и не должны пересылаться другим людям. Если удалить только EXE, пользовательские настройки сохранятся.
-
-## Сборка из исходников
-
-Требуется **.NET 8 SDK**. Из корня репозитория:
+You need the **.NET 8 SDK**. From the repository root:
 
 ```powershell
 dotnet publish src/TernionOverlay/TernionOverlay.csproj -c Release -r win-x64 --self-contained true -o publish
 ```
 
-Готовый файл — `publish\TernionOverlay.exe`. Проект на WinForms; при сборке на Linux включён `EnableWindowsTargeting`, но **запуск и внешний вид нужно проверять на Windows**. При загрузке проекта в Visual Studio открывайте `src/TernionOverlay/TernionOverlay.csproj`.
+The resulting file is `publish\TernionOverlay.exe`. This is a WinForms application. `EnableWindowsTargeting` allows a Linux build, but **the UI and gameplay behavior must be checked on Windows**. In Visual Studio, open `src/TernionOverlay/TernionOverlay.csproj`.
 
-Проверка протокола на мок-сервере TeamSpeak (без реального клиента):
+To test the protocol against a local TeamSpeak mock instead of a real client:
 
 ```powershell
 dotnet run --project src/TernionHarness/TernionHarness.csproj -c Release
 ```
 
-Тест проверяет разбор снимка подключения, описание, состав канала и события; он **не проверяет визуальную отрисовку WinForms**. Структура проекта: `TernionCore` — модели и Remote Apps; `TernionOverlay` — окно, настройки и трей; `TernionHarness` — локальный тестовый WebSocket-сервер.
+The harness tests the connection snapshot, Description, channel membership and events. It **does not validate the WinForms UI**. Project layout: `TernionCore` contains models and the Remote Apps client; `TernionOverlay` contains the overlay window, settings and tray; `TernionHarness` contains a local test WebSocket server.
 
-## Если не работает
+## Troubleshooting
 
-- **«Ожидание TeamSpeak»** — проверьте, что TS6 запущен на **этом же ПК**, доступ удалённых приложений включён, порт совпадает. Подключение используется только по `127.0.0.1`; пробрасывать порт на сервере TeamSpeak не нужно.
-- **«Ожидание разрешения»** — подтвердите запрос в клиенте. Если приложение уже есть в разрешённых, проверьте, что сам клиент подключён к голосовому серверу; новый запрос разрешения может не появиться.
-- **«Подключись к серверу» / пустой список** — войдите на голосовой сервер в TS6 и в нужный канал. После входа оверлей повторно запрашивает состояние.
-- **Ник обрезан** — проверьте ширину панели, размер шрифта и масштаб Windows. Окно расширяется под имена и загруженные аватары, но ограничено шириной экрана.
-- **Оверлей не виден поверх игры** — сначала проверьте на рабочем столе; затем попробуйте оконный/безрамочный режим игры. Не все эксклюзивные полноэкранные режимы поддерживают обычные окна поверх изображения.
-- **Не удаётся перетащить** — разблокируйте в меню трея и хватайте за капсулу, а не за прозрачный промежуток. После перемещения снова заблокируйте.
+- **“Waiting for TeamSpeak”** — TS6 must run on the **same PC**, Remote Apps must be enabled, and both ports must match. It connects over `127.0.0.1`; no port forwarding on the TeamSpeak server is needed.
+- **“Waiting for permission”** — approve the request in TS6. If the app is already authorized, check that TS6 itself is connected to a voice server; there may be no new permission request.
+- **“Connect to a server” / empty list** — join the voice server and the intended channel in TS6. The overlay retries its connection to obtain a channel snapshot after you join.
+- **Name is clipped** — check minimum panel width, font size and Windows scaling. The window expands for names and loaded avatars, up to the screen width.
+- **Not visible over a game** — first test it on the desktop, then try a windowed or borderless game. Ordinary windows may not appear over every exclusive full-screen mode.
+- **Cannot drag it** — unlock via the tray and drag a visible capsule rather than the transparent gap; lock it again after moving.
 
-## Статус и распространение
+## Status and distribution
 
-Репозиторий приватный и предназначен для внутреннего тестирования. Папки `dist/`, `bin/`, `obj/` и пользовательские конфигурации исключены из Git: EXE публикуется отдельно после проверки Windows-версии. Лицензия на открытое распространение пока не выбрана.
-
-## Этот продукт создан с помощью вайбкода через Hermes Agent (Codex + Deep Seek v4 flash 0713)
+This repository is private and used for internal testing. `dist/`, `bin/`, `obj/` and user configuration are excluded from Git. The EXE is distributed separately after a Windows check. No open-distribution license has been selected yet.
