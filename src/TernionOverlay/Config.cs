@@ -22,8 +22,8 @@ public sealed class AppConfig
     public string Hotkey { get; set; } = "Alt+T";
     public int WindowX { get; set; } = 200;
     public int WindowY { get; set; } = 120;
-    public int FontSize { get; set; } = 14;
-    public int WindowWidth { get; set; } = 300;
+    public int FontSize { get; set; } = 12;
+    public int WindowWidth { get; set; } = 200;
     public string Language { get; set; } = "en";
     public int? UiRevision { get; set; } = 3;
     public bool Locked { get; set; } = true;
