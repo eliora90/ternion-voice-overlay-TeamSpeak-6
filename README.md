@@ -2,6 +2,8 @@
 
 **English** · [Русский](README.ru.md)
 
+> A full Russian guide, including the owner’s screenshots, is available in [README.ru.md](README.ru.md). You can add English-language screenshots to this page later.
+
 A local overlay for **Windows 10/11 x64** that displays the people in your current TeamSpeak 6 voice channel over desktop windows and games. It connects to the **TeamSpeak client running on the same PC** through Remote Apps—not directly to the voice server. You do not need a server administrator account or a separate bot.
 
 > This project is still being tested. Whether it appears over a full-screen game depends on the game's display mode and Windows. Try a windowed or borderless game first. This is not an official TeamSpeak app.
@@ -32,7 +34,7 @@ On the PC running the overlay, open **Settings → Names** and select **Nick + r
 ## Getting started
 
 1. Install and open the **TeamSpeak 6 client** on the **same Windows PC** that will run the overlay. Connect to your voice server and join a channel. No TeamSpeak server-side configuration is required.
-2. In TeamSpeak, open **Settings → Remote Apps** and make sure access is enabled. Check the local port: the overlay initially uses **5899**. If your client uses a different port, enter it in the overlay settings.
+2. In TeamSpeak, open **Settings → Remote Apps** and make sure access is enabled. Check the local port: the overlay initially uses **5899**. If another Remote App (for example, Stream Deck) already uses a different port, configure the overlay to use **that same TS6 port** rather than changing the other app.
 3. Obtain a built `TernionOverlay.exe` from the private project owner **or build it using the instructions below**. Place it in a permanent directory, such as `C:\Apps\TernionOverlay\`. A self-contained build does not require a separate .NET installation on the Windows PC.
 4. Run the EXE. On first connection, TeamSpeak may ask you to authorize **Ternion Overlay**; allow it in the client. The app will appear in the authorized-apps list, and later launches normally do not prompt again. Its authorization key is stored locally in your Windows profile.
 5. If the panel does not appear or shows a status message, check that TS6 is running; the **ports match**; access was authorized; and the TS6 client is **connected to a voice server and in a channel**. App authorization and connection to the voice server are separate conditions.
@@ -72,6 +74,10 @@ The harness tests the connection snapshot, Description, channel membership and e
 - **Name is clipped** — check minimum panel width, font size and Windows scaling. The window expands for names and loaded avatars, up to the screen width.
 - **Not visible over a game** — first test it on the desktop, then try a windowed or borderless game. Ordinary windows may not appear over every exclusive full-screen mode.
 - **Cannot drag it** — unlock via the tray and drag a visible capsule rather than the transparent gap; lock it again after moving.
+
+## Made with AI-assisted coding
+
+This project was developed through vibe coding with Hermes Agent (Codex and DeepSeek v4 Flash 0713).
 
 ## Status and distribution
 
