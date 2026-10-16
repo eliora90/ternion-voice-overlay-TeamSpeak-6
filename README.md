@@ -2,8 +2,6 @@
 
 **English** · [Русский](README.ru.md)
 
-> A full Russian guide, including the owner’s screenshots, is available in [README.ru.md](README.ru.md). You can add English-language screenshots to this page later.
-
 A local overlay for **Windows 10/11 x64** that displays the people in your current TeamSpeak 6 voice channel over desktop windows and games. It connects to the **TeamSpeak client running on the same PC** through Remote Apps—not directly to the voice server. You do not need a server administrator account or a separate bot.
 
 > This project is still being tested. Whether it appears over a full-screen game depends on the game's display mode and Windows. Try a windowed or borderless game first. This is not an official TeamSpeak app.
@@ -25,9 +23,11 @@ A local overlay for **Windows 10/11 x64** that displays the people in your curre
 Instructions for **each** player:
 
 1. Connect to a voice server in TeamSpeak 6.
-2. Click **your own nickname** in the client list, then the **pencil/edit icon** for client settings.
+2. Click **your own nickname** in the client list in the voice channel, then the **pencil/edit icon** for client settings.
 3. Enter the name you want shown (for example, `Alex`) in **Description**. This is the **client's Description**, not the server or channel description.
 4. Save the change with **Done** (or the corresponding button in your client language).
+   <img width="362" height="269" alt="Снимок экрана 2026-10-16 143303" src="https://github.com/user-attachments/assets/281488cd-0a42-4822-b349-649a6bbd426a" />
+
 
 On the PC running the overlay, open **Settings → Names** and select **Nick + real name from description**. The player will then appear as `Nickname (Alex)`. If **Nickname only** is selected, Description is hidden even if it is filled in. If a recently edited name does not appear, confirm it was saved in TeamSpeak and reconnect to the voice server to refresh the data.
 
@@ -35,10 +35,12 @@ On the PC running the overlay, open **Settings → Names** and select **Nick + r
 
 1. Install and open the **TeamSpeak 6 client** on the **same Windows PC** that will run the overlay. Connect to your voice server and join a channel. No TeamSpeak server-side configuration is required.
 2. In TeamSpeak, open **Settings → Remote Apps** and make sure access is enabled. Check the local port: the overlay initially uses **5899**. If another Remote App (for example, Stream Deck) already uses a different port, configure the overlay to use **that same TS6 port** rather than changing the other app.
-3. Obtain a built `TernionOverlay.exe` from the private project owner **or build it using the instructions below**. Place it in a permanent directory, such as `C:\Apps\TernionOverlay\`. A self-contained build does not require a separate .NET installation on the Windows PC.
-4. Run the EXE. On first connection, TeamSpeak may ask you to authorize **Ternion Overlay**; allow it in the client. The app will appear in the authorized-apps list, and later launches normally do not prompt again. Its authorization key is stored locally in your Windows profile.
-5. If the panel does not appear or shows a status message, check that TS6 is running; the **ports match**; access was authorized; and the TS6 client is **connected to a voice server and in a channel**. App authorization and connection to the voice server are separate conditions.
-6. Find the Ternion icon in the system tray (expand hidden icons if necessary). Open **Settings** to choose the language, alignment, name mode, avatars and other options. To reposition the overlay, choose **Move overlay (unlock)** from the tray, drag a visible capsule, then choose **Lock overlay (click-through)**. When locked, clicks pass through to the game if click-through is enabled.
+   <img width="1311" height="588" alt="Снимок экрана 2026-10-16 123342" src="https://github.com/user-attachments/assets/9fad1a7c-a15b-4737-b372-5938c008fc56" />
+
+4. Obtain a built `TernionOverlay.exe` from the private project owner **or build it using the instructions below**. Place it in a permanent directory, such as `C:\Apps\TernionOverlay\`. A self-contained build does not require a separate .NET installation on the Windows PC.
+5. Run the EXE. On first connection, TeamSpeak may ask you to authorize **Ternion Overlay**; allow it in the client. The app will appear in the authorized-apps list, and later launches normally do not prompt again. Its authorization key is stored locally in your Windows profile.
+6. If the panel does not appear or shows a status message, check that TS6 is running; the **ports match**; access was authorized; and the TS6 client is **connected to a voice server and in a channel**. App authorization and connection to the voice server are separate conditions.
+7. Find the Ternion icon in the system tray (expand hidden icons if necessary). Open **Settings** to choose the language, alignment, name mode, avatars and other options. To reposition the overlay, choose **Move overlay (unlock)** from the tray, drag a visible capsule, then choose **Lock overlay (click-through)**. When locked, clicks pass through to the game if click-through is enabled.
 
 To see other players' names, ask them to follow the [Description instructions](#how-to-show-players-real-names).
 
