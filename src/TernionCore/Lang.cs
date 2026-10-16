@@ -90,7 +90,7 @@ public sealed class Lang
         ["settings.autostart.win"] = "Автозапуск при входе в Windows",
         ["settings.autostart.ts"] = "Ожидать подключения TeamSpeak",
         ["settings.clickthrough"] = "Клики проходят в игру (окно насквозь)",
-        ["settings.hotkey"] = "Показать/скрыть (Alt+T):",
+        ["settings.hotkey"] = "Показать/скрыть:",
         ["settings.fontsize"] = "Размер шрифта:",
         ["settings.width"] = "Ширина панели:",
         ["settings.language"] = "Язык / Language:",

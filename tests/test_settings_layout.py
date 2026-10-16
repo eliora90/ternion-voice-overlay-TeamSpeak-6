@@ -3,9 +3,15 @@ from pathlib import Path
 import unittest
 
 SOURCE = (Path(__file__).resolve().parents[1] / "src/TernionOverlay/SettingsForm.cs").read_text()
+LANG = (Path(__file__).resolve().parents[1] / "src/TernionCore/Lang.cs").read_text()
 
 
 class SettingsLayoutTests(unittest.TestCase):
+    def test_hotkey_label_does_not_repeat_a_stale_default_binding(self):
+        self.assertIn('["settings.hotkey"] = "Показать/скрыть:"', LANG)
+        self.assertIn('["settings.hotkey"] = "Show/hide hotkey:"', LANG)
+        self.assertNotIn('Показать/скрыть (Alt+T):', LANG)
+
     def test_approved_brand_blue_replaces_old_accent(self):
         self.assertTrue('internal static readonly Color Blue = Color.FromArgb(12, 74, 160);' in SOURCE,
                         'Settings accent should be #0C4AA0')
