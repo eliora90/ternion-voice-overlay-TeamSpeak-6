@@ -31,7 +31,7 @@ On the PC running the overlay, open **Settings → Names** and select **Nick + r
 
 ## Getting started
 
-**Download for Windows (v1.0):** [TernionOverlay-v1.0-win-x64.exe](https://github.com/eliora90/ternion-voice-overlay-TeamSpeak-6/releases/download/v1.0/TernionOverlay-v1.0-win-x64.exe) ([release notes](https://github.com/eliora90/ternion-voice-overlay-TeamSpeak-6/releases/tag/v1.0)). This build includes the owner-approved settings design; behavior in individual games and display modes may vary. While this repository is private, only people with access to it can download the release. You can also build from source below.
+**Download for Windows (v1.0):** [TernionOverlay-v1.0-win-x64.exe](https://github.com/eliora90/ternion-voice-overlay-TeamSpeak-6/releases/download/v1.0/TernionOverlay-v1.0-win-x64.exe) ([release notes](https://github.com/eliora90/ternion-voice-overlay-TeamSpeak-6/releases/tag/v1.0)). This build includes the owner-approved settings design; behavior in individual games and display modes may vary. You can also build from source below.
 
 1. Install and open the **TeamSpeak 6 client** on the **same Windows PC** that will run the overlay. Connect to your voice server and join a channel. No TeamSpeak server-side configuration is required.
 2. In TeamSpeak, open **Settings → Remote Apps** and make sure access is enabled. Check the local port: the overlay initially uses **5899**. If another Remote App (for example, Stream Deck) already uses a different port, configure the overlay to use **that same TS6 port** rather than changing the other app.
@@ -90,7 +90,7 @@ Design updates and collecting feedback.
 
 ## Status and distribution
 
-This repository remains private. `dist/`, `bin/`, `obj/` and user configuration are excluded from Git; the v1.0 EXE is distributed as a release asset.
+`dist/`, `bin/`, `obj/` and user configuration are excluded from Git; the v1.0 EXE is distributed as a release asset.
 
 ## Privacy notes
 
