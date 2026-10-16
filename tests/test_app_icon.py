@@ -18,6 +18,11 @@ class AppIconTests(unittest.TestCase):
             sizes.add((w or 256, h or 256))
         self.assertTrue({(16, 16), (32, 32), (48, 48), (256, 256)}.issubset(sizes))
 
+    def test_chosen_serif_t_is_the_source_design(self):
+        script = (ROOT / "scripts" / "generate_icon.py").read_text()
+        self.assertIn("DejaVuSerif-Bold.ttf", script)
+        self.assertIn("d.text((x, y), 'T'", script)
+
     def test_exe_embeds_icon(self):
         xml = (PROJECT / "TernionOverlay.csproj").read_text()
         self.assertIn("<ApplicationIcon>Assets/Ternion.ico</ApplicationIcon>", xml)
