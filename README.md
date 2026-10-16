@@ -35,7 +35,8 @@ On the PC running the overlay, open **Settings → Names** and select **Nick + r
 
 1. Install and open the **TeamSpeak 6 client** on the **same Windows PC** that will run the overlay. Connect to your voice server and join a channel. No TeamSpeak server-side configuration is required.
 2. In TeamSpeak, open **Settings → Remote Apps** and make sure access is enabled. Check the local port: the overlay initially uses **5899**. If another Remote App (for example, Stream Deck) already uses a different port, configure the overlay to use **that same TS6 port** rather than changing the other app.
-  <img width="1722" height="954" alt="TeamSpeak 6 Remote Apps settings" src="https://github.com/user-attachments/assets/266254b8-8ac8-4d87-a06f-2ef371925fd5" />
+ <img width="756" height="978" alt="Снимок экрана 2026-10-16 163048" src="https://github.com/user-attachments/assets/946e8d36-893f-4db3-9f5e-d7a474128110" />
+
 
 
 3. Download the Windows EXE above, or build it using the instructions below. Place it in a permanent directory, such as `C:\Apps\TernionOverlay\`. A self-contained build does not require a separate .NET installation on the Windows PC.
