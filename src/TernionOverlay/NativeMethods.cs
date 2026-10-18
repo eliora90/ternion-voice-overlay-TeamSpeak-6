@@ -8,8 +8,13 @@ internal static class NativeMethods
     public const int WS_EX_LAYERED = 0x80000;
     public const int WS_EX_TRANSPARENT = 0x20;
     public const int WS_EX_TOOLWINDOW = 0x80;
+    /// <summary>Окно не забирает активацию: игра не теряет фокус и не показывает курсор.</summary>
+    public const int WS_EX_NOACTIVATE = 0x08000000;
 
     public const int WM_HOTKEY = 0x0312;
+    public const int WM_MOUSEACTIVATE = 0x0021;
+    /// <summary>Ответ на WM_MOUSEACTIVATE: обработать клик, но окно не активировать.</summary>
+    public const int MA_NOACTIVATE = 3;
 
     public static readonly IntPtr HWND_TOPMOST = new(-1);
 
@@ -94,7 +99,7 @@ internal static class NativeMethods
     public static void SetPlainWindow(IntPtr hwnd)
     {
         int style = GetWindowLong(hwnd, GWL_EXSTYLE);
-        style = (style | WS_EX_LAYERED | WS_EX_TOOLWINDOW) & ~WS_EX_TRANSPARENT;
+        style = (style | WS_EX_LAYERED | WS_EX_TOOLWINDOW | WS_EX_NOACTIVATE) & ~WS_EX_TRANSPARENT;
         SetWindowLong(hwnd, GWL_EXSTYLE, style);
         SetLayeredWindowAttributes(hwnd, CapsuleKey, 255, LWA_COLORKEY);
         SetWindowPos(hwnd, HWND_TOPMOST, 0, 0, 0, 0, SWP_NOMOVE | SWP_NOSIZE | SWP_NOACTIVATE | SWP_SHOWWINDOW);
@@ -103,7 +108,7 @@ internal static class NativeMethods
     /// <summary>Клики насквозь (для игры): чернила окна не мешают нажатиям.</summary>
     public static void SetClickThrough(IntPtr hwnd)
     {
-        int style = GetWindowLong(hwnd, GWL_EXSTYLE) | WS_EX_LAYERED | WS_EX_TRANSPARENT | WS_EX_TOOLWINDOW;
+        int style = GetWindowLong(hwnd, GWL_EXSTYLE) | WS_EX_LAYERED | WS_EX_TRANSPARENT | WS_EX_TOOLWINDOW | WS_EX_NOACTIVATE;
         SetWindowLong(hwnd, GWL_EXSTYLE, style);
         SetLayeredWindowAttributes(hwnd, CapsuleKey, 255, LWA_COLORKEY);
         SetWindowPos(hwnd, HWND_TOPMOST, 0, 0, 0, 0, SWP_NOMOVE | SWP_NOSIZE | SWP_NOACTIVATE | SWP_SHOWWINDOW);

@@ -124,6 +124,13 @@ public sealed class OverlayForm : Form
             ToggleVisible();
             return;
         }
+        // Клик по окну не должен активировать оверлей: иначе игра теряет фокус
+        // и Windows показывает системный курсор поверх прицела.
+        if (m.Msg == NativeMethods.WM_MOUSEACTIVATE)
+        {
+            m.Result = NativeMethods.MA_NOACTIVATE;
+            return;
+        }
         base.WndProc(ref m);
     }
 
@@ -145,6 +152,24 @@ public sealed class OverlayForm : Form
     private Point _dragOffset;
 
     public bool IsMoveMode => !_cfg.Locked;
+
+    /// <summary>Показ окна не активирует его: игра остаётся в фокусе.</summary>
+    protected override bool ShowWithoutActivation => true;
+
+    /// <summary>Стили задаём при создании хендла: при смене размера или DPI Windows
+    /// пересоздаёт окно, и стили, выставленные через SetWindowLong, теряются.
+    /// Из-за этого «клики насквозь» могли тихо отключиться прямо посреди игры.</summary>
+    protected override CreateParams CreateParams
+    {
+        get
+        {
+            var cp = base.CreateParams;
+            cp.ExStyle |= NativeMethods.WS_EX_NOACTIVATE | NativeMethods.WS_EX_TOOLWINDOW | NativeMethods.WS_EX_LAYERED;
+            bool interactive = _cfg is not null && (!_cfg.Locked || !_cfg.ClickThrough);
+            if (!interactive) cp.ExStyle |= NativeMethods.WS_EX_TRANSPARENT;
+            return cp;
+        }
+    }
 
     protected override void OnMouseDown(MouseEventArgs e)
     {
@@ -352,17 +377,6 @@ public sealed class OverlayForm : Form
         g.Restore(prev);
         using var pen = new Pen(Color.FromArgb(120, 255, 255, 255), 1.4f);
         g.DrawEllipse(pen, r);
-    }
-
-    // Необязательный цветовой акцент капсулы по названию канала (пример сопоставления).
-    private static Color TeamColor(string channel)
-    {
-        string c = channel.ToLowerInvariant();
-        if (c.Contains("земля")) return Color.FromArgb(64, 196, 140);
-        if (c.Contains("небо")) return Color.FromArgb(80, 150, 255);
-        if (c.Contains("штурм")) return Color.FromArgb(240, 90, 90);
-        if (c.Contains("дрг")) return Color.FromArgb(185, 120, 255);
-        return Color.FromArgb(71, 226, 137);
     }
 
     private void Present(Bitmap bmp) => bmp.Dispose(); // устаревшее (окно рисуется через OnPaint)
